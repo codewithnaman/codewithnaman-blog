@@ -3,14 +3,6 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
-    paths:
-      - 'src/**'
-      - 'public/**'
-      - 'astro.config.mjs'
-      - 'tsconfig.json'
-      - 'package.json'
-      - 'bun.lock'
-      - '.github/workflows/deploy.yml'
   workflow_dispatch:
 
 permissions:
@@ -22,24 +14,10 @@ concurrency:
   group: pages
   cancel-in-progress: false
 
-env:
-  # All actions below are pinned to versions that ship with Node.js 24,
-  # so no compatibility shim is needed:
-  #   actions/checkout@v6            -> Node 24
-  #   actions/configure-pages@v6     -> Node 24
-  #   actions/upload-pages-artifact@v5 -> Node 24
-  #   actions/deploy-pages@v5        -> Node 24
-  # See: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
-
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    # Bind the build to the same `github-pages` environment as the deploy
-    # job. This is what makes `vars.*` and `secrets.*` defined under
-    # _Settings → Environments → github-pages_ resolvable here at build
-    # time. Without it, only repository-level vars/secrets are visible.
     environment: github-pages
     steps:
       - name: Checkout
@@ -47,10 +25,6 @@ jobs:
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
-        with:
-          # Keep CI Bun pinned so `--frozen-lockfile` is deterministic.
-          # Update this intentionally when you want to adopt a newer Bun.
-          bun-version: 1.3.13
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
@@ -59,27 +33,13 @@ jobs:
         uses: actions/configure-pages@v6
 
       - name: Build with Astro
-        # All values below are read from repository Variables
-        # (Settings → Secrets and variables → Actions → Variables).
-        # Any unset variable expands to an empty string, which the
-        # theme treats as "feature disabled" — so every var is optional
-        # and you only set the ones you actually use.
         env:
-          # --- Site identity ---
-          # Falls back to the canonical github.io origin for the current
-          # owner so a brand-new fork builds successfully with zero
-          # configuration. Override by setting `vars.SITE_URL` in the UI.
           SITE_URL: ${{ vars.SITE_URL || format('https://{0}.github.io', github.repository_owner) }}
-          # Sub-path for GitHub Pages. Hard-coded fallback to the repo
-          # name keeps the build correct even before the variable is
-          # configured. Override by setting `vars.BASE_PATH` in the UI.
           BASE_PATH: ${{ vars.BASE_PATH || format('/{0}', github.event.repository.name) }}
-          # --- Author / social handles (all optional) ---
           PUBLIC_GITHUB_HANDLE: ${{ vars.PUBLIC_GITHUB_HANDLE || github.repository_owner }}
           PUBLIC_GITHUB_REPO: ${{ vars.PUBLIC_GITHUB_REPO || github.event.repository.name }}
           PUBLIC_TWITTER_HANDLE: ${{ vars.PUBLIC_TWITTER_HANDLE }}
           PUBLIC_CONTACT_EMAIL: ${{ vars.PUBLIC_CONTACT_EMAIL }}
-          # --- Giscus (all optional) ---
           PUBLIC_GISCUS_ENABLED: ${{ vars.PUBLIC_GISCUS_ENABLED }}
           PUBLIC_GISCUS_REPO: ${{ vars.PUBLIC_GISCUS_REPO }}
           PUBLIC_GISCUS_REPO_ID: ${{ vars.PUBLIC_GISCUS_REPO_ID }}
