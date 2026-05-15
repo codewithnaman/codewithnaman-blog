@@ -35,7 +35,7 @@ export const SITE: SiteConfig = {
     leftText: undefined,
     rightText: undefined,
     showPrivacyPolicy: false,
-    showThemeCredits: true,
+    showThemeCredits: false,
     themeName: 'Chirping Astro',
     themeUrl: THEME_REPO_URL,
   },
