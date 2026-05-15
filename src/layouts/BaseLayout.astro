@@ -11,6 +11,7 @@ import BackToTop from '../components/islands/BackToTop.astro';
 import { ClientRouter } from 'astro:transitions';
 import { SITE } from '../config';
 import { useTranslations, withBase } from '../i18n/utils';
+import type { ImageMetadata } from 'astro';
 import { buildSeo, type SeoMeta } from '../utils/seo';
 
 interface Props {
@@ -48,6 +49,11 @@ const {
 const t = useTranslations();
 const lang = 'en';
 
+const authorUrl = SITE.author.url ?? SITE.url;
+const avatarRaw = SITE.author.avatar;
+const logoUrl =
+  typeof avatarRaw === 'string' ? avatarRaw : (avatarRaw as ImageMetadata | undefined)?.src;
+
 const pathWithoutLocale = Astro.url.pathname;
 const meta: SeoMeta =
   seo ??
@@ -69,15 +75,8 @@ const meta: SeoMeta =
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" content="#1b1b1e" />
     <link rel="icon" type="image/x-icon" href={withBase('/favicon.ico')} />
-    <link
-      rel="alternate"
-      type="application/rss+xml"
-      title={SITE.title}
-      href={withBase('/rss.xml')}
-    />
     <SEO meta={meta} />
     {/* JSON-LD: WebSite + Organization */}
     <script
@@ -98,17 +97,36 @@ const meta: SeoMeta =
             '@type': 'Organization',
             '@id': `${SITE.url}/#organization`,
             name: SITE.author.name,
-            url: SITE.author.url ?? SITE.url,
-            ...(SITE.author.avatar && {
+            url: authorUrl,
+            ...(logoUrl && {
               logo: {
                 '@type': 'ImageObject',
-                url: new URL(SITE.author.avatar as string, SITE.url).toString(),
+                url: new URL(logoUrl, SITE.url).toString(),
               },
             }),
           },
         ],
       })}
     />
+    {/* JSON-LD: BreadcrumbList */}
+    {
+      crumbs.length > 0 && (
+        <script
+          type="application/ld+json"
+          is:inline
+          set:html={JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: crumbs.map((c, i) => ({
+              '@type': 'ListItem',
+              position: i + 1,
+              name: c.label,
+              ...(c.href && { item: new URL(c.href, SITE.url).toString() }),
+            })),
+          })}
+        />
+      )
+    }
     {/* Custom fonts configured via Astro Fonts API */}
     <Font cssVariable="--font-source-sans-3" />
     <Font cssVariable="--font-lato" />

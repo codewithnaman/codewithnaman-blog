@@ -21,7 +21,7 @@ import {
   shouldShowHero,
 } from '../utils/posts';
 import { buildSeo } from '../utils/seo';
-import type { MarkdownHeading } from 'astro';
+import type { ImageMetadata, MarkdownHeading } from 'astro';
 
 interface Props {
   post: Post;
@@ -54,12 +54,19 @@ const generatedOgPath = `/og/${ogSlug}.png`;
 const skipAutoOg = !SITE.autoOgImage || import.meta.env.CI_SKIP_AUTO_OG_IMAGE === 'true';
 const ogImage = heroSrc ?? (skipAutoOg ? undefined : generatedOgPath);
 
+// OG image dimensions: generated OG images are 1200x630; hero images use asset metadata.
+const ogWidth = heroAsset ? ((heroAsset as ImageMetadata).width ?? 1200) : 1200;
+const ogHeight = heroAsset ? ((heroAsset as ImageMetadata).height ?? 630) : 630;
+
 const seo = buildSeo({
   title: post.data.title,
   description: post.data.description,
   pathWithoutLocale: Astro.url.pathname,
   fullPath: Astro.url.pathname,
   ogImage,
+  ogImageWidth: ogWidth,
+  ogImageHeight: ogHeight,
+  ogImageAlt: post.data.heroImageAlt ?? post.data.title,
   type: 'article',
   publishedTime: post.data.pubDate,
   modifiedTime: post.data.updatedDate,

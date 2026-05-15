@@ -7,6 +7,9 @@ export interface SeoMeta {
   description: string;
   canonical: string;
   ogImage: string;
+  ogImageWidth?: number;
+  ogImageHeight?: number;
+  ogImageAlt?: string;
   type: 'website' | 'article';
   publishedTime?: string;
   modifiedTime?: string;
@@ -19,6 +22,9 @@ interface BuildSeoArgs {
   pathWithoutLocale: string;
   fullPath: string;
   ogImage?: string;
+  ogImageWidth?: number;
+  ogImageHeight?: number;
+  ogImageAlt?: string;
   type?: 'website' | 'article';
   publishedTime?: Date;
   modifiedTime?: Date;
@@ -36,6 +42,9 @@ export function buildSeo(args: BuildSeoArgs): SeoMeta {
       : SITE.defaultOgImage
         ? new URL(withBase(SITE.defaultOgImage), SITE.url).toString()
         : `${SITE.url}/og/default.png`,
+    ogImageWidth: args.ogImageWidth,
+    ogImageHeight: args.ogImageHeight,
+    ogImageAlt: args.ogImageAlt,
     type: args.type ?? 'website',
     publishedTime: args.publishedTime?.toISOString(),
     modifiedTime: args.modifiedTime?.toISOString(),
