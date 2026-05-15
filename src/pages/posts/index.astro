@@ -1,0 +1,22 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PostList from '~/components/PostList.astro';
+import Pagination from '~/components/Pagination.astro';
+import { SITE } from '~/config';
+import { getPostsByDate } from '~/utils/posts';
+import { useTranslations } from '~/i18n/utils';
+
+const t = useTranslations();
+const allPosts = await getPostsByDate();
+const pageSize = SITE.postsPerPage;
+const lastPage = Math.max(1, Math.ceil(allPosts.length / pageSize));
+const currentPage = 1;
+const pagePosts = allPosts.slice(0, pageSize);
+
+const hrefForPage = (n: number) => (n === 1 ? '/posts/' : `/posts/page/${n}/`);
+---
+
+<BaseLayout title={`${t('nav.posts')} — ${SITE.title}`} crumbs={[{ label: t('nav.posts') }]}>
+  <PostList posts={pagePosts} />
+  <Pagination currentPage={currentPage} lastPage={lastPage} hrefForPage={hrefForPage} />
+</BaseLayout>

@@ -62,6 +62,18 @@ export async function getPosts(): Promise<Post[]> {
   return sortPosts(all);
 }
 
+/** Get only pinned (featured) posts, sorted by pubDate desc. */
+export async function getFeaturedPosts(): Promise<Post[]> {
+  const all = await getPosts();
+  return all.filter((p) => p.data.pinned);
+}
+
+/** Get all non-draft posts sorted strictly by date (newest first, ignoring pinned). */
+export async function getPostsByDate(): Promise<Post[]> {
+  const all = await getPosts();
+  return sortPostsByDate(all);
+}
+
 /** Find a single post by slug. */
 export async function getPostBySlug(slug: string): Promise<Post | undefined> {
   const posts = await getPosts();

@@ -47,7 +47,7 @@
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "husky": "^9.1.7",
     "katex": "^0.16.45",
-    "lint-staged": "^15.5.2",
+    "lint-staged": "^17.0.4",
     "pagefind": "^1.5.2",
     "prettier": "^3.8.3",
     "prettier-plugin-astro": "^0.14.1",
@@ -61,7 +61,7 @@
     "satori": "^0.26.0",
     "shiki": "^4.0.2",
     "tailwindcss": "^4.3.0",
-    "typescript": "^5.8.3",
+    "typescript": "^6.0.3",
     "zod": "^4.4.3"
   },
   "keywords": [
@@ -71,5 +71,8 @@
     "daisyui",
     "mdx",
     "pagefind"
-  ]
+  ],
+  "overrides": {
+    "yaml": "^2.8.2"
+  }
 }

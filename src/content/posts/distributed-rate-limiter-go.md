@@ -6,6 +6,7 @@ updatedDate: 2026-05-12
 tags: [go, distributed-systems, rate-limiting, backend]
 categories: [Engineering, System Design]
 draft: false
+pinned: true
 toc: true
 ---
 

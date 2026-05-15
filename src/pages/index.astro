@@ -1,20 +1,45 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import PostList from '~/components/PostList.astro';
-import Pagination from '~/components/Pagination.astro';
 import { SITE } from '~/config';
-import { getPosts } from '~/utils/posts';
+import { getFeaturedPosts, getPostsByDate } from '~/utils/posts';
+import { useTranslations } from '~/i18n/utils';
 
-const posts = await getPosts();
-const pageSize = SITE.postsPerPage;
-const lastPage = Math.max(1, Math.ceil(posts.length / pageSize));
-const currentPage = 1;
-const pagePosts = posts.slice(0, pageSize);
-
-const hrefForPage = (n: number) => (n === 1 ? '/' : `/page/${n}/`);
+const t = useTranslations();
+const featuredPosts = await getFeaturedPosts();
+const recentPosts = (await getPostsByDate()).slice(0, SITE.postsPerPage);
 ---
 
 <BaseLayout title={SITE.title} description={SITE.description}>
-  <PostList posts={pagePosts} />
-  <Pagination currentPage={currentPage} lastPage={lastPage} hrefForPage={hrefForPage} />
+  {
+    featuredPosts.length > 0 && (
+      <section class="mb-10">
+        <h2 class="text-base-content mb-6 flex items-center gap-2 text-xl font-bold tracking-wide">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="text-primary"
+          >
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+          </svg>
+          {t('list.featuredPosts')}
+        </h2>
+        <PostList posts={featuredPosts} />
+      </section>
+    )
+  }
+
+  <section>
+    <h2 class="text-base-content mb-6 text-xl font-bold tracking-wide">
+      {t('list.latestPosts')}
+    </h2>
+    <PostList posts={recentPosts} />
+  </section>
 </BaseLayout>

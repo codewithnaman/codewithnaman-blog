@@ -9,7 +9,7 @@ export interface SiteConfig {
     avatar?: string | ImageMetadata;
     bio?: string;
   };
-  defaultOgImage: string;
+  defaultOgImage?: string;
   postsPerPage: number;
   isoDates: boolean;
   showFeaturedImages: boolean;

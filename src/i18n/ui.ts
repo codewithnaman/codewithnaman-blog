@@ -50,6 +50,8 @@ export const messages = {
   'post.author': 'Author',
 
   'list.allPosts': 'All posts',
+  'list.featuredPosts': 'Featured',
+  'list.latestPosts': 'Latest Posts',
   'list.empty': 'No posts found.',
   'list.tagPosts': 'Posts tagged',
   'list.categoryPosts': 'Posts in',

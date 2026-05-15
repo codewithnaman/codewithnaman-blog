@@ -11,6 +11,7 @@ import type { UIKey } from '../i18n/ui';
 import { Icon } from 'astro-icon/components';
 import { Image } from 'astro:assets';
 import ThemeToggle from './islands/ThemeToggle.astro';
+import cwnLogo from '../assets/images/site/CWN Logo.png';
 
 const t = useTranslations();
 const home = '/';
@@ -63,9 +64,15 @@ const navItems = NAV.map((item) => ({
           )
         }
       </span>
-      <span class="text-base-content hover:text-primary mt-4 text-xl font-semibold tracking-wide">
-        {SITE.title}
-      </span>
+      <Image
+        src={cwnLogo}
+        alt={SITE.title}
+        width={180}
+        height={48}
+        class="mt-4 h-12 w-auto"
+        loading="eager"
+        decoding="async"
+      />
     </a>
     {
       SITE.author.bio && (
@@ -90,6 +97,7 @@ const navItems = NAV.map((item) => ({
                 href={item.href}
                 aria-current={isActive ? 'page' : undefined}
                 class="chirpy-nav-link"
+                {...(item.href.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})}
               >
                 <Icon name={item.icon ?? 'lucide:home'} width={16} height={16} />
                 <span>{item.label}</span>

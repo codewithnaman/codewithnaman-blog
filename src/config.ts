@@ -1,10 +1,8 @@
-import avatarImg from './assets/images/site/avatar.svg';
-import ogDefaultImg from './assets/images/site/og-default.svg';
+import avatarImg from './assets/images/site/avatar.jpg';
 import type { SiteConfig, NavItem, SocialLink, GiscusConfig } from './types/config';
 
 export const SITE_IMAGES = {
   avatar: avatarImg,
-  ogDefault: ogDefaultImg,
 } as const;
 
 const GITHUB_HANDLE = import.meta.env.PUBLIC_GITHUB_HANDLE ?? '';
@@ -24,9 +22,8 @@ export const SITE: SiteConfig = {
     name: 'Naman Gupta',
     url: GITHUB_HANDLE ? `https://github.com/${GITHUB_HANDLE}` : undefined,
     avatar: avatarImg,
-    bio: 'Senior Backend & Platform Engineer.',
   },
-  defaultOgImage: ogDefaultImg.src,
+  defaultOgImage: undefined,
   postsPerPage: 8,
   isoDates: false,
   showFeaturedImages: true,
@@ -50,7 +47,7 @@ export const NAV: readonly NavItem[] = [
   { key: 'posts', href: '/posts', icon: 'lucide:file-text' },
   { key: 'categories', href: '/categories', icon: 'lucide:layers' },
   { key: 'tags', href: '/tags', icon: 'lucide:tag' },
-  { key: 'about', href: '/about', icon: 'lucide:info' },
+  { key: 'about', href: 'https://codewithnaman.com/', icon: 'lucide:info' },
 ] as const;
 
 export const SOCIALS: readonly SocialLink[] = [

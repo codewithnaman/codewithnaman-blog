@@ -9,7 +9,6 @@ import Panel from '../components/Panel.astro';
 import SEO from '../components/SEO.astro';
 import BackToTop from '../components/islands/BackToTop.astro';
 import { ClientRouter } from 'astro:transitions';
-import faviconImg from '../assets/images/site/favicon.svg';
 import { SITE } from '../config';
 import { useTranslations, withBase } from '../i18n/utils';
 import { buildSeo, type SeoMeta } from '../utils/seo';
@@ -72,7 +71,7 @@ const meta: SeoMeta =
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" content="#1b1b1e" />
-    <link rel="icon" type="image/svg+xml" href={withBase(faviconImg.src)} />
+    <link rel="icon" type="image/x-icon" href={withBase('/favicon.ico')} />
     <link
       rel="alternate"
       type="application/rss+xml"
