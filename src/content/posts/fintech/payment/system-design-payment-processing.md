@@ -2,6 +2,7 @@
 title: 'System Design: Real-Time Payment Processing at Scale'
 description: 'A deep dive into the architecture behind processing millions of payment transactions per day with sub-second latency and 99.99% availability.'
 pubDate: 2026-04-28
+author: 'jane-doe'
 tags: [system-design, fintech, architecture, distributed-systems]
 categories: [System Design, FinTech]
 draft: false

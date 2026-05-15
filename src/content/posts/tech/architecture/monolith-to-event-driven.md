@@ -1,10 +1,10 @@
 ---
-title: 'Migrating from Monolith to Event-Driven Architecture'
-description: 'Lessons learned from decomposing a 2M-line monolithic Java application into event-driven microservices without downtime.'
-pubDate: 2026-04-15
-updatedDate: 2026-04-18
-tags: [architecture, microservices, event-driven, cloud, migration]
-categories: [Engineering, Cloud]
+title: 'Monolith to Event-Driven Architecture'
+description: 'Step-by-step guide to migrating from a monolith to an event-driven architecture.'
+pubDate: 2025-12-28
+author: 'naman-gupta'
+tags: [architecture, event-driven, migration, kafka]
+categories: [Architecture, System Design]
 draft: false
 toc: true
 ---

@@ -37,6 +37,7 @@ const baseFrontmatter = ({ image }: SchemaContext) =>
     toc: z.boolean().default(true),
     pinned: z.boolean().default(false),
     math: z.boolean().default(false),
+    author: z.string().optional(),
   });
 
 export type PostFrontmatter = z.infer<ReturnType<typeof baseFrontmatter>>;

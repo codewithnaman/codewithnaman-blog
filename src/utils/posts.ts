@@ -17,9 +17,10 @@ export type Post = CollectionEntry<'posts'>;
 const isProd = import.meta.env.PROD;
 const skipPostCollections = import.meta.env.CI_SKIP_CONTENT_COLLECTIONS === 'true';
 
-/** Public slug used for the URL: filename minus extension. */
+/** Public slug used for the URL: filename minus extension (ignores folder path). */
 export function postSlug(entry: Post): string {
-  return entry.id.replace(/\.(md|mdx)$/i, '');
+  const filename = entry.id.split('/').pop() ?? entry.id;
+  return filename.replace(/\.(md|mdx)$/i, '');
 }
 
 /** URL path for a post. */

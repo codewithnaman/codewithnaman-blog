@@ -47,7 +47,7 @@ export const NAV: readonly NavItem[] = [
   { key: 'posts', href: '/posts', icon: 'lucide:file-text' },
   { key: 'categories', href: '/categories', icon: 'lucide:layers' },
   { key: 'tags', href: '/tags', icon: 'lucide:tag' },
-  { key: 'about', href: 'https://codewithnaman.com/', icon: 'lucide:info' },
+  { key: 'about', href: '/about', icon: 'lucide:info' },
 ] as const;
 
 export const SOCIALS: readonly SocialLink[] = [

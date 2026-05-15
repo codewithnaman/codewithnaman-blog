@@ -1,0 +1,15 @@
+---
+import type { Author } from '../data/authors';
+
+interface Props {
+  author: Author;
+  size?: 'sm' | 'md';
+}
+
+const { author, size = 'md' } = Astro.props;
+const textSize = size === 'sm' ? 'text-xs' : 'text-sm';
+---
+
+<span class={textSize}>
+  By <a href="/about" class="text-base-content hover:text-primary font-medium">{author.name}</a>
+</span>

@@ -9,6 +9,8 @@ import Giscus from '../components/islands/Giscus.astro';
 import MathStyles from '../components/MathStyles.astro';
 import { Icon } from 'astro-icon/components';
 import { GISCUS, SITE } from '../config';
+import { getAuthor } from '../data/authors';
+import AuthorByline from '../components/AuthorByline.astro';
 import { useTranslations, formatDate, isoDate } from '../i18n/utils';
 import { readingTime } from '../utils/reading-time';
 import {
@@ -35,6 +37,7 @@ interface Props {
 const { post, headings, body, prev, next, relatedPosts } = Astro.props;
 const t = useTranslations();
 const minutes = readingTime(body).minutes;
+const author = getAuthor(post.data.author);
 
 const commentsEnabled = post.data.comments !== false && GISCUS.enabled;
 
@@ -84,8 +87,8 @@ const jsonLd = {
   ...(post.data.updatedDate && { dateModified: post.data.updatedDate.toISOString() }),
   author: {
     '@type': 'Person',
-    name: SITE.author.name,
-    url: SITE.author.url ?? SITE.url,
+    name: author.name,
+    url: SITE.url,
   },
   publisher: {
     '@type': 'Organization',
@@ -126,6 +129,10 @@ const crumbs = [{ label: t('nav.posts'), href: '/' }, { label: post.data.title }
         {post.data.title}
       </h1>
       <p class="text-base-content/65 mt-3 text-lg">{post.data.description}</p>
+
+      <div class="mt-4">
+        <AuthorByline author={author} />
+      </div>
 
       <div class="text-base-content/70 mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
         <span class="inline-flex items-center gap-1">

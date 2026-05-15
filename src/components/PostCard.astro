@@ -1,5 +1,7 @@
 ---
 import { SITE } from '../config';
+import { getAuthor } from '../data/authors';
+import AuthorByline from './AuthorByline.astro';
 import { formatDate, isoDate } from '../i18n/utils';
 import { type Post, postPath, heroImage, shouldShowHero } from '../utils/posts';
 import SmartImage from './SmartImage.astro';
@@ -16,6 +18,7 @@ const heroAsset = heroImage(post);
 const hasImage = Boolean(heroAsset) && shouldShowHero(post);
 const heroAlt = post.data.heroImageAlt ?? '';
 const isDynamicCardHeight = post.data.dynamicPostCardHeight ?? SITE.dynamicPostCardHeight;
+const author = getAuthor(post.data.author);
 ---
 
 <article class="chirpy-card">
@@ -52,13 +55,13 @@ const isDynamicCardHeight = post.data.dynamicPostCardHeight ?? SITE.dynamicPostC
       <p
         class:list={[
           'text-base-content/70 text-base',
-          hasImage ? 'mt-2 mb-3 line-clamp-2' : 'mt-1 mb-2 line-clamp-3',
+          hasImage ? 'mt-2 mb-2 line-clamp-2' : 'mt-1 mb-1 line-clamp-3',
         ]}
       >
         {post.data.description}
       </p>
 
-      <div class="text-base-content/70 mt-3 flex items-end justify-between gap-2 text-xs">
+      <div class="text-base-content/70 flex items-end justify-between gap-2 text-xs">
         <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
           <span class="inline-flex items-center gap-1">
             <Icon name="lucide:clock" width={12} height={12} />
@@ -96,4 +99,8 @@ const isDynamicCardHeight = post.data.dynamicPostCardHeight ?? SITE.dynamicPostC
       </div>
     </div>
   </a>
+
+  <div class="px-4 pb-3">
+    <AuthorByline author={author} size="sm" />
+  </div>
 </article>

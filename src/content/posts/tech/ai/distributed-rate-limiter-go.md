@@ -1,12 +1,11 @@
 ---
-title: 'Building a Distributed Rate Limiter in Go'
-description: 'How we designed and implemented a token bucket rate limiter that handles 500K+ requests per second across a multi-region deployment.'
-pubDate: 2026-05-10
-updatedDate: 2026-05-12
-tags: [go, distributed-systems, rate-limiting, backend]
-categories: [Engineering, System Design]
+title: 'Distributed Rate Limiter in Go'
+description: 'Building a production-grade rate limiter with Redis and Golang.'
+pubDate: 2026-02-20
+author: 'naman-gupta'
+tags: [go, redis, rate-limiting, distributed-systems]
+categories: [Architecture, Backend]
 draft: false
-pinned: true
 toc: true
 ---
 
