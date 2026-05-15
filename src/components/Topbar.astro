@@ -3,29 +3,22 @@
  * Chirpy-style topbar: hamburger (mobile only) | breadcrumb | site title (mobile) | search
  * Sits inside the main column, below the header.
  */
-import { SITE, type Locale } from '../config';
-import { useTranslations, localizedPath } from '../i18n/utils';
+import { SITE } from '../config';
+import { useTranslations } from '../i18n/utils';
 import { Icon } from 'astro-icon/components';
 import SearchButton from './islands/SearchButton.astro';
-import LanguageSwitcher from './islands/LanguageSwitcher.astro';
 
 interface Props {
-  locale: Locale;
   /**
    * Breadcrumb segments. The last segment is treated as the current page.
    * Pass [] to show only "Home".
    */
   crumbs?: Array<{ label: string; href?: string }>;
-  /**
-   * Locales for which a translation actually exists. Forwarded to the
-   * language switcher so it only links to working pages.
-   */
-  availableLocales?: readonly Locale[];
 }
 
-const { locale, crumbs = [], availableLocales } = Astro.props;
-const t = useTranslations(locale);
-const home = localizedPath('/', locale);
+const { crumbs = [] } = Astro.props;
+const t = useTranslations();
+const home = '/';
 ---
 
 <header class="chirpy-topbar" aria-label="Top Bar">
@@ -70,7 +63,6 @@ const home = localizedPath('/', locale);
   </div>
 
   <div class="chirpy-topbar__search">
-    <SearchButton locale={locale} />
-    {SITE.multilingual && <LanguageSwitcher locale={locale} availableLocales={availableLocales} />}
+    <SearchButton />
   </div>
 </header>

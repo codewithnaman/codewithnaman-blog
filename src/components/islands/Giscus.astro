@@ -10,18 +10,17 @@
  *
  * Set values in `src/config.ts` -> GISCUS, or via PUBLIC_GISCUS_* env vars.
  */
-import { GISCUS, type Locale } from '../../config';
+import { GISCUS } from '../../config';
 import { useTranslations } from '../../i18n/utils';
 import { Icon } from 'astro-icon/components';
 
 interface Props {
-  locale: Locale;
   /** Per-post override; defaults to true. */
   enabled?: boolean;
 }
 
-const { locale, enabled = true } = Astro.props;
-const t = useTranslations(locale);
+const { enabled = true } = Astro.props;
+const t = useTranslations();
 
 const giscusGloballyEnabled = GISCUS.enabled;
 const giscusPostEnabled = enabled;
@@ -82,7 +81,7 @@ const setupSteps = [
         data-emit-metadata={GISCUS.emitMetadata}
         data-input-position={GISCUS.inputPosition}
         data-loading={GISCUS.loading}
-        data-locale={locale === 'fr' ? 'fr' : 'en'}
+        data-locale="en"
       />
     )
   }

@@ -31,6 +31,8 @@ Thumbs.db
 
 # bun
 bun.lockb
+bun.lock
+bunfig.toml
 .bun-cache/
 
 # pagefind cache

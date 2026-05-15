@@ -5,16 +5,9 @@
  *
  * On post pages we replace this with the article TOC (handled by PostLayout).
  */
-import type { Locale } from '../config';
 import { getPosts, getTagsWithCount, postPath, tagPath } from '../utils/posts';
 
-interface Props {
-  locale: Locale;
-}
-
-const { locale } = Astro.props;
-
-const [posts, tags] = await Promise.all([getPosts(locale), getTagsWithCount(locale)]);
+const [posts, tags] = await Promise.all([getPosts(), getTagsWithCount()]);
 
 const recent = posts
   .slice()
@@ -33,7 +26,7 @@ const trending = tags.slice(0, 8);
     recent.length > 0 && (
       <section class="mb-8">
         <h2 class="text-base-content/70 mb-3 text-xs font-bold tracking-[0.1em] uppercase">
-          {locale === 'fr' ? 'Mises à jour récentes' : 'Recently Updated'}
+          Recently Updated
         </h2>
         <ul class="chirpy-aside-list">
           {recent.map((post) => (
@@ -52,11 +45,11 @@ const trending = tags.slice(0, 8);
     trending.length > 0 && (
       <section>
         <h2 class="text-base-content/70 mb-3 text-xs font-bold tracking-[0.1em] uppercase">
-          {locale === 'fr' ? 'Étiquettes en vogue' : 'Trending Tags'}
+          Trending Tags
         </h2>
         <div class="flex flex-wrap gap-2">
           {trending.map((tag) => (
-            <a href={tagPath(locale, tag.name)} class="post-tag">
+            <a href={tagPath(tag.name)} class="post-tag">
               {tag.name}
             </a>
           ))}

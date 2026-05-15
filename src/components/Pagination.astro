@@ -1,5 +1,4 @@
 ---
-import type { Locale } from '../config';
 import { useTranslations } from '../i18n/utils';
 import { Icon } from 'astro-icon/components';
 
@@ -7,13 +6,12 @@ interface Props {
   currentPage: number;
   lastPage: number;
   /** Function that returns the URL for a given page number. */
-  // eslint-disable-next-line no-unused-vars
+
   hrefForPage: (page: number) => string;
-  locale: Locale;
 }
 
-const { currentPage, lastPage, hrefForPage, locale } = Astro.props;
-const t = useTranslations(locale);
+const { currentPage, lastPage, hrefForPage } = Astro.props;
+const t = useTranslations();
 
 if (lastPage <= 1) return null;
 

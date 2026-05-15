@@ -1,18 +1,9 @@
 ---
-import { SITE } from '~/config';
-
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import { useTranslations, withBase } from '~/i18n/utils';
 import { Icon } from 'astro-icon/components';
 
-export function getStaticPaths() {
-  return SITE.locales.map((l) => ({
-    params: { locale: l === SITE.defaultLocale ? undefined : l },
-    props: { locale: l },
-  }));
-}
-const { locale } = Astro.props;
-const t = useTranslations(locale);
+const t = useTranslations();
 const pagefindScript = withBase('/_pagefind/pagefind.js');
 
 const i18n = {
@@ -26,12 +17,7 @@ const i18n = {
 };
 ---
 
-<BaseLayout
-  title={t('search.title')}
-  pathWithoutLocale="/search/"
-  narrow={true}
-  crumbs={[{ label: t('search.title') }]}
->
+<BaseLayout title={t('search.title')} narrow={true} crumbs={[{ label: t('search.title') }]}>
   <header class="mb-6">
     <h1 class="text-3xl font-bold tracking-tight">{t('search.title')}</h1>
     <p class="text-base-content/70 mt-1">{t('search.placeholder')}</p>
@@ -97,7 +83,7 @@ const i18n = {
 
   interface PagefindModule {
     init?: () => Promise<void>;
-    // eslint-disable-next-line no-unused-vars
+
     search: (term: string) => Promise<{ results: PagefindResult[] } | null>;
   }
 

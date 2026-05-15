@@ -32,7 +32,7 @@ const SKIP_RSS_SITEMAP = process.env.CI_SKIP_RSS_SITEMAP === 'true';
  *
  * Why: a root-relative href works in BOTH environments
  *   - production: same origin as the sitemap, browsers apply the XSL
- *   - `bun serve` / preview: same origin (localhost), no cross-origin
+ *   - `npm run preview`: same origin (localhost), no cross-origin
  *     XSLT block (which renders as a blank page in browsers).
  *
  * Crawlers ignore `<?xml-stylesheet ?>` entirely, so SEO is unaffected.
@@ -67,11 +67,11 @@ export default defineConfig({
   // so production builds need `base` to match that subpath — every
   // generated asset URL (CSS, JS, images, favicons) is prefixed with it.
   //
-  // In `bun run dev`, however, we want the site to open at plain
+  // In `npm run dev`, however, we want the site to open at plain
   // `http://localhost:4321/` for a friction-free local experience. The
   // `BASE_PATH` env var (read from `.env`) lets each environment opt in:
   //   - `.env` (committed empty / unset)         → dev runs at `/`
-  //   - CI / Pages workflow sets BASE_PATH=/chirping-astro for the build
+  //   - CI / Pages workflow sets BASE_PATH for the build
   //
   // In source code, always build absolute paths through `withBase()` /
   // `localizedPath()` in `src/i18n/utils.ts` so they pick up this value
@@ -108,18 +108,7 @@ export default defineConfig({
     ],
   },
 
-  // i18n config: EN is default and serves at root (no prefix), FR served at /fr.
-  // We rely on filesystem routing (src/pages and src/pages/[...locale]) for the actual
-  // routes, but still expose locales here so integrations like sitemap can
-  // generate hreflang alternates correctly.
-  i18n: {
-    locales: [...SITE.locales],
-    defaultLocale: SITE.defaultLocale,
-    routing: {
-      prefixDefaultLocale: false,
-      redirectToDefaultLocale: false,
-    },
-  },
+  // Single-language site — no i18n routing needed.
 
   markdown: {
     // `remark-math` parses `$inline$` and `$$display$$` blocks into MDAST
@@ -196,16 +185,6 @@ export default defineConfig({
       ? []
       : [
           sitemap({
-            i18n: {
-              defaultLocale: SITE.defaultLocale,
-              locales: Object.fromEntries(SITE.locales.map((l) => [l, l])),
-            },
-            // Browsers (and only browsers) apply this XSL to render a
-            // human-readable view of `sitemap-index.xml` and `sitemap-0.xml`.
-            // Search-engine crawlers ignore the processing instruction.
-            // Note: `@astrojs/sitemap` rewrites this into an ABSOLUTE URL using
-            // `site`. The `rewriteSitemapXslToRelative()` integration below
-            // turns it back into a root-relative path so local preview works.
             xslURL: SITEMAP_XSL_HREF,
             filter: (page) => !page.includes('/draft/') && !page.endsWith('/404/'),
           }),

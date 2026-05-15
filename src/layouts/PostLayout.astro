@@ -1,20 +1,20 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import PostNav from '../components/PostNav.astro';
+import RelatedPosts from '../components/RelatedPosts.astro';
 import SmartImage from '../components/SmartImage.astro';
 import TableOfContents from '../components/islands/TableOfContents.astro';
+import ScrollProgress from '../components/islands/ScrollProgress.astro';
 import Giscus from '../components/islands/Giscus.astro';
 import MathStyles from '../components/MathStyles.astro';
 import { Icon } from 'astro-icon/components';
-import { GISCUS, SITE, type Locale } from '../config';
-import { useTranslations, stripLocale, formatDate, isoDate, localizedPath } from '../i18n/utils';
+import { GISCUS, SITE } from '../config';
+import { useTranslations, formatDate, isoDate } from '../i18n/utils';
 import { readingTime } from '../utils/reading-time';
 import {
   type Post,
   tagPath,
   categoryPath,
-  getTranslations,
-  postPath,
   postSlug,
   heroImage,
   heroImageSrc,
@@ -25,30 +25,18 @@ import type { MarkdownHeading } from 'astro';
 
 interface Props {
   post: Post;
-  /** Astro's `headings` array from `await render(post)`. */
   headings: MarkdownHeading[];
-  /** Raw body string used for reading time. */
   body: string;
   prev?: Post;
   next?: Post;
-  locale: Locale;
+  relatedPosts: Post[];
 }
 
-const { post, headings, body, prev, next, locale } = Astro.props;
-const t = useTranslations(locale);
+const { post, headings, body, prev, next, relatedPosts } = Astro.props;
+const t = useTranslations();
 const minutes = readingTime(body).minutes;
 
-// Translation siblings (used by language switcher links).
-const translations = await getTranslations(post);
-const translationLinks: Partial<Record<Locale, string>> = {};
-for (const [lang, p] of Object.entries(translations)) {
-  if (p) translationLinks[lang as Locale] = postPath(p);
-}
-// Locales that actually have a published version of this post.
-const availableLocales = (Object.keys(translationLinks) as Locale[]).sort();
-
 const commentsEnabled = post.data.comments !== false && GISCUS.enabled;
-const pathWithoutLocale = stripLocale(Astro.url.pathname);
 
 const heroSrc = heroImageSrc(post);
 const heroAsset = heroImage(post);
@@ -62,29 +50,46 @@ const articleClass = SITE.boxedArticles
 // Use hero image for OG if available, otherwise fallback to the generated OG image
 // (unless Auto-OG is disabled globally or skipped in CI).
 const ogSlug = postSlug(post);
-const ogPrefix = locale === SITE.defaultLocale ? '' : `${locale}/`;
-const generatedOgPath = `/og/${ogPrefix}${ogSlug}.png`;
+const generatedOgPath = `/og/${ogSlug}.png`;
 const skipAutoOg = !SITE.autoOgImage || import.meta.env.CI_SKIP_AUTO_OG_IMAGE === 'true';
 const ogImage = heroSrc ?? (skipAutoOg ? undefined : generatedOgPath);
 
 const seo = buildSeo({
   title: post.data.title,
   description: post.data.description,
-  pathWithoutLocale,
+  pathWithoutLocale: Astro.url.pathname,
   fullPath: Astro.url.pathname,
-  locale,
   ogImage,
   type: 'article',
   publishedTime: post.data.pubDate,
   modifiedTime: post.data.updatedDate,
   tags: post.data.tags,
-  availableLocales,
 });
 
-const crumbs = [
-  { label: t('nav.posts'), href: localizedPath('/', locale) },
-  { label: post.data.title },
-];
+const postUrl = new URL(Astro.url.pathname, SITE.url).toString();
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.description,
+  url: postUrl,
+  datePublished: post.data.pubDate.toISOString(),
+  ...(post.data.updatedDate && { dateModified: post.data.updatedDate.toISOString() }),
+  author: {
+    '@type': 'Person',
+    name: SITE.author.name,
+    url: SITE.author.url ?? SITE.url,
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: SITE.author.name,
+    url: SITE.url,
+  },
+  ...(post.data.tags.length > 0 && { keywords: post.data.tags.join(', ') }),
+  ...(heroSrc && { image: { '@type': 'ImageObject', url: new URL(heroSrc, SITE.url).toString() } }),
+};
+
+const crumbs = [{ label: t('nav.posts'), href: '/' }, { label: post.data.title }];
 ---
 
 <BaseLayout
@@ -96,12 +101,13 @@ const crumbs = [
   tags={post.data.tags}
   crumbs={crumbs}
   seo={seo}
-  availableLocales={availableLocales}
 >
+  <ScrollProgress />
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
   {post.data.math && <MathStyles />}
   {
     post.data.toc && headings.length > 0 && (
-      <TableOfContents slot="aside-bottom" headings={headings} locale={locale} />
+      <TableOfContents slot="aside-bottom" headings={headings} />
     )
   }
 
@@ -117,14 +123,14 @@ const crumbs = [
       <div class="text-base-content/70 mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
         <span class="inline-flex items-center gap-1">
           <Icon name="lucide:calendar-days" width={14} height={14} />
-          <time datetime={isoDate(post.data.pubDate)}>{formatDate(post.data.pubDate, locale)}</time>
+          <time datetime={isoDate(post.data.pubDate)}>{formatDate(post.data.pubDate)}</time>
         </span>
         {
           post.data.updatedDate && (
             <span class="inline-flex items-center gap-1">
               <Icon name="lucide:check" width={14} height={14} />
               <time datetime={isoDate(post.data.updatedDate)}>
-                {t('post.updatedOn')} {formatDate(post.data.updatedDate, locale)}
+                {t('post.updatedOn')} {formatDate(post.data.updatedDate)}
               </time>
             </span>
           )
@@ -136,7 +142,7 @@ const crumbs = [
               {post.data.categories.map((c, i) => (
                 <>
                   {i > 0 && <span class="text-base-content/40 mx-0.5">,</span>}
-                  <a href={categoryPath(locale, c)} class="hover:text-primary">
+                  <a href={categoryPath(c)} class="hover:text-primary">
                     {c}
                   </a>
                 </>
@@ -184,7 +190,7 @@ const crumbs = [
             {t('post.tags')}
           </span>
           {post.data.tags.map((tag) => (
-            <a href={tagPath(locale, tag)} class="post-tag text-xs">
+            <a href={tagPath(tag)} class="post-tag text-xs">
               {tag}
             </a>
           ))}
@@ -192,21 +198,18 @@ const crumbs = [
       )
     }
 
-    <PostNav prev={prev} next={next} locale={locale} />
+    <PostNav prev={prev} next={next} />
 
     {
       commentsEnabled ? (
-        <Giscus locale={locale} />
+        <Giscus />
       ) : (
         post.data.comments === false && (
           <p class="text-base-content/70 mt-10 text-sm">{t('post.commentsDisabled')}</p>
         )
       )
     }
+
+    <RelatedPosts posts={relatedPosts} />
   </article>
 </BaseLayout>
-
-{/* Translation links exposed for the LanguageSwitcher to read at runtime */}
-<script is:inline define:vars={{ links: translationLinks }}>
-  window.__chirpyTranslations = links;
-</script>

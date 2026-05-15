@@ -1,0 +1,49 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PostList from '~/components/PostList.astro';
+import Pagination from '~/components/Pagination.astro';
+import { SITE } from '~/config';
+import { useTranslations } from '~/i18n/utils';
+import { getPosts } from '~/utils/posts';
+
+interface Props {
+  current: number;
+  last: number;
+}
+
+export async function getStaticPaths() {
+  const allPosts = await getPosts();
+  const totalPages = Math.ceil(allPosts.length / SITE.postsPerPage);
+  const paths = [];
+  for (let i = 2; i <= totalPages; i++) {
+    paths.push({
+      params: { page: String(i) },
+      props: { current: i, last: totalPages },
+    });
+  }
+  return paths;
+}
+
+const t = useTranslations();
+const { current, last } = Astro.props as Props;
+const allPosts = await getPosts();
+const pageSize = SITE.postsPerPage;
+const start = (current - 1) * pageSize;
+const pagePosts = allPosts.slice(start, start + pageSize);
+
+const hrefForPage = (n: number) => (n === 1 ? '/' : `/page/${n}/`);
+---
+
+<BaseLayout title={`${t('list.allPosts')} — ${t('pagination.page')} ${current}`}>
+  <header class="mb-6">
+    <h1 class="text-3xl font-bold tracking-tight">{t('list.allPosts')}</h1>
+    <p class="text-base-content/70 text-sm">
+      {t('pagination.page')}
+      {current}
+      {t('pagination.of')}
+      {last}
+    </p>
+  </header>
+  <PostList posts={pagePosts} />
+  <Pagination currentPage={current} lastPage={last} hrefForPage={hrefForPage} />
+</BaseLayout>

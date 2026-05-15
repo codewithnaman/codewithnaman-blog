@@ -20,6 +20,6 @@
     "noFallthroughCasesInSwitch": true,
     "verbatimModuleSyntax": true,
     "jsx": "preserve",
-    "types": ["astro/client", "@types/bun"]
+    "types": ["astro/client"]
   }
 }

@@ -13,16 +13,14 @@
  *    currently visible heading reported by IntersectionObserver.
  */
 import { useTranslations } from '../../i18n/utils';
-import type { Locale } from '../../config';
 import type { MarkdownHeading } from 'astro';
 
 interface Props {
   headings: MarkdownHeading[];
-  locale: Locale;
 }
 
-const { headings, locale } = Astro.props;
-const t = useTranslations(locale);
+const { headings } = Astro.props;
+const t = useTranslations();
 const items = headings.filter((h) => h.depth >= 2 && h.depth <= 4);
 
 // Pre-compute the "parent H2" slug for every item. For depth=2 it is the

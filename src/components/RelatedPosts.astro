@@ -1,0 +1,42 @@
+---
+import type { Post } from '../utils/posts';
+import { postPath } from '../utils/posts';
+
+interface Props {
+  posts: Post[];
+}
+
+const { posts } = Astro.props;
+
+if (posts.length === 0) return null;
+---
+
+<section class="border-base-300 mt-12 border-t pt-8">
+  <h2 class="text-base-content mb-6 text-2xl font-bold tracking-tight">Related Posts</h2>
+  <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      posts.map((post) => (
+        <a
+          href={postPath(post)}
+          class="border-base-300 bg-base-100 hover:border-primary/50 group block overflow-hidden rounded-md border transition"
+        >
+          <div class="p-4">
+            <h3 class="text-base-content group-hover:text-primary line-clamp-2 text-base leading-snug font-semibold transition">
+              {post.data.title}
+            </h3>
+            <p class="text-base-content/60 mt-2 line-clamp-2 text-sm leading-relaxed">
+              {post.data.description}
+            </p>
+            <div class="text-base-content/50 mt-3 flex flex-wrap gap-1.5">
+              {post.data.tags.slice(0, 3).map((tag) => (
+                <span class="border-base-300 bg-base-200 rounded-full px-2 py-0.5 text-[0.7rem] font-medium">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        </a>
+      ))
+    }
+  </div>
+</section>

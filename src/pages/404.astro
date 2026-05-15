@@ -1,9 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { useTranslations, localizedPath } from '../i18n/utils';
+import { useTranslations } from '../i18n/utils';
 
-const locale = 'en';
-const t = useTranslations(locale);
+const t = useTranslations();
 ---
 
 <BaseLayout
@@ -18,7 +17,7 @@ const t = useTranslations(locale);
     <p class="text-primary text-7xl font-black tracking-tight">404</p>
     <h1 class="mt-4 text-2xl font-bold tracking-tight">{t('404.title')}</h1>
     <p class="text-base-content/70 mt-2">{t('404.description')}</p>
-    <a href={localizedPath('/', locale)} class="btn btn-primary mt-6">
+    <a href="/" class="btn btn-primary mt-6">
       {t('404.cta')}
     </a>
   </section>

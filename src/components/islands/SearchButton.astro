@@ -15,15 +15,9 @@
  */
 
 import { useTranslations, withBase } from '../../i18n/utils';
-import type { Locale } from '../../config';
 import { Icon } from 'astro-icon/components';
 
-interface Props {
-  locale: Locale;
-}
-
-const { locale } = Astro.props;
-const t = useTranslations(locale);
+const t = useTranslations();
 const pagefindScript = withBase('/_pagefind/pagefind.js');
 
 const i18n = {
@@ -153,7 +147,7 @@ const i18n = {
 
   interface PagefindModule {
     init?: () => Promise<void>;
-    // eslint-disable-next-line no-unused-vars
+
     search: (term: string) => Promise<{ results: PagefindResult[] } | null>;
   }
 

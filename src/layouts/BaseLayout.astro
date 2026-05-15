@@ -10,16 +10,14 @@ import SEO from '../components/SEO.astro';
 import BackToTop from '../components/islands/BackToTop.astro';
 import { ClientRouter } from 'astro:transitions';
 import faviconImg from '../assets/images/site/favicon.svg';
-import { SITE, type Locale } from '../config';
-import { detectLocale, htmlLang, useTranslations, stripLocale, withBase } from '../i18n/utils';
+import { SITE } from '../config';
+import { useTranslations, withBase } from '../i18n/utils';
 import { buildSeo, type SeoMeta } from '../utils/seo';
 
 interface Props {
   title?: string;
   description?: string;
   ogImage?: string;
-  /** Logical path WITHOUT locale prefix (used for hreflang). */
-  pathWithoutLocale?: string;
   type?: 'website' | 'article';
   publishedTime?: Date;
   modifiedTime?: Date;
@@ -32,12 +30,6 @@ interface Props {
   crumbs?: Array<{ label: string; href?: string }>;
   /** Pre-built SEO meta override. */
   seo?: SeoMeta;
-  /**
-   * Locales for which a translation of the current page actually
-   * exists. Used to limit the language switcher to working links and
-   * to scope hreflang alternates. Defaults to all `SITE.locales`.
-   */
-  availableLocales?: readonly Locale[];
 }
 
 const {
@@ -52,14 +44,12 @@ const {
   narrow = false,
   crumbs = [],
   seo,
-  availableLocales,
 } = Astro.props;
 
-const locale: Locale = detectLocale(Astro.url.pathname);
-const t = useTranslations(locale);
-const lang = htmlLang(locale);
+const t = useTranslations();
+const lang = 'en';
 
-const pathWithoutLocale = Astro.props.pathWithoutLocale ?? stripLocale(Astro.url.pathname);
+const pathWithoutLocale = Astro.url.pathname;
 const meta: SeoMeta =
   seo ??
   buildSeo({
@@ -67,38 +57,59 @@ const meta: SeoMeta =
     description,
     pathWithoutLocale,
     fullPath: Astro.url.pathname,
-    locale,
     ogImage,
     type,
     publishedTime,
     modifiedTime,
     tags,
-    availableLocales,
   });
 ---
 
 <!doctype html>
-<html lang={lang} data-theme="chirpy-light">
+<html lang={lang} data-theme="chirpy-dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f7f8" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1b1b1e" />
+    <meta name="theme-color" content="#1b1b1e" />
     <link rel="icon" type="image/svg+xml" href={withBase(faviconImg.src)} />
     <link
       rel="alternate"
       type="application/rss+xml"
-      title={`${SITE.title} (EN)`}
+      title={SITE.title}
       href={withBase('/rss.xml')}
     />
-    <link
-      rel="alternate"
-      type="application/rss+xml"
-      title={`${SITE.title} (FR)`}
-      href={withBase('/fr/rss.xml')}
-    />
     <SEO meta={meta} />
+    {/* JSON-LD: WebSite + Organization */}
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@graph': [
+          {
+            '@type': 'WebSite',
+            '@id': `${SITE.url}/#website`,
+            url: SITE.url,
+            name: SITE.title,
+            description: SITE.description,
+            publisher: { '@id': `${SITE.url}/#organization` },
+          },
+          {
+            '@type': 'Organization',
+            '@id': `${SITE.url}/#organization`,
+            name: SITE.author.name,
+            url: SITE.author.url ?? SITE.url,
+            ...(SITE.author.avatar && {
+              logo: {
+                '@type': 'ImageObject',
+                url: new URL(SITE.author.avatar as string, SITE.url).toString(),
+              },
+            }),
+          },
+        ],
+      })}
+    />
     {/* Custom fonts configured via Astro Fonts API */}
     <Font cssVariable="--font-source-sans-3" />
     <Font cssVariable="--font-lato" />
@@ -110,9 +121,8 @@ const meta: SeoMeta =
         function applyTheme() {
           try {
             var stored = localStorage.getItem('theme');
-            var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             var valid = stored === 'chirpy-dark' || stored === 'chirpy-light';
-            var theme = valid ? stored : prefersDark ? 'chirpy-dark' : 'chirpy-light';
+            var theme = valid ? stored : 'chirpy-dark';
             if (!valid && stored) localStorage.setItem('theme', theme);
             document.documentElement.setAttribute('data-theme', theme);
           } catch {
@@ -120,7 +130,6 @@ const meta: SeoMeta =
           }
         }
         applyTheme();
-        // Re-apply after view transitions swap in a fresh <html data-theme>.
         document.addEventListener('astro:after-swap', applyTheme);
       })();
     </script>
@@ -134,11 +143,11 @@ const meta: SeoMeta =
       {t('site.skipToContent')}
     </a>
 
-    <Sidebar locale={locale} />
+    <Sidebar />
 
     <div class="chirpy-main-wrapper">
       <div class="chirpy-shell">
-        <Topbar locale={locale} crumbs={crumbs} availableLocales={availableLocales} />
+        <Topbar crumbs={crumbs} />
 
         <div class="flex flex-1 gap-10">
           <div class="flex min-w-0 flex-1 flex-col">
@@ -150,13 +159,13 @@ const meta: SeoMeta =
               <slot />
             </main>
 
-            <Footer locale={locale} />
+            <Footer />
           </div>
 
           {
             !hidePanel && (
               <aside class="chirpy-panel-rail" aria-label="Sidebar widgets">
-                <Panel locale={locale} />
+                <Panel />
                 <slot name="aside-bottom" />
               </aside>
             )

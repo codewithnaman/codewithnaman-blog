@@ -1,17 +1,11 @@
 ---
-import { SITE, type Locale } from '../config';
-import { localizedPath, useTranslations } from '../i18n/utils';
+import { SITE } from '../config';
+import { useTranslations } from '../i18n/utils';
 
-interface Props {
-  locale: Locale;
-}
-
-const { locale } = Astro.props;
-const t = useTranslations(locale);
+const t = useTranslations();
 const year = new Date().getFullYear();
 const footerLeftText = SITE.footer.leftText?.trim();
 const footerRightText = SITE.footer.rightText?.trim();
-const showPrivacyPolicy = SITE.footer.showPrivacyPolicy ?? SITE.showPrivacyPolicy;
 const showThemeCredits = SITE.footer.showThemeCredits ?? true;
 const shouldRenderRightFooter = Boolean(footerRightText) || showThemeCredits;
 const resolvedLeftText = footerLeftText
@@ -34,16 +28,6 @@ const resolvedLeftText = footerLeftText
             {SITE.author.name}
           </a>
           . {t('footer.copyright')}
-        </>
-      )
-    }
-    {
-      showPrivacyPolicy && (
-        <>
-          {' · '}
-          <a href={localizedPath('/privacy', locale)} class="hover:text-primary">
-            {t('footer.privacy')}
-          </a>
         </>
       )
     }

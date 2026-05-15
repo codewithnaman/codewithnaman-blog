@@ -22,7 +22,7 @@
 /* ---------- Chirpy LIGHT ---------- */
 @plugin 'daisyui/theme' {
   name: 'chirpy-light';
-  default: true;
+  default: false;
   prefersdark: false;
   color-scheme: light;
 
@@ -70,7 +70,7 @@
 /* ---------- Chirpy DARK ---------- */
 @plugin 'daisyui/theme' {
   name: 'chirpy-dark';
-  default: false;
+  default: true;
   prefersdark: true;
   color-scheme: dark;
 

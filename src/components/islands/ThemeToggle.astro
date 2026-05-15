@@ -1,14 +1,8 @@
 ---
 import { useTranslations } from '../../i18n/utils';
-import type { Locale } from '../../config';
 import { Icon } from 'astro-icon/components';
 
-interface Props {
-  locale: Locale;
-}
-
-const { locale } = Astro.props;
-const t = useTranslations(locale);
+const t = useTranslations();
 ---
 
 <button
@@ -74,7 +68,6 @@ const t = useTranslations(locale);
 
     const transition = (
       document as unknown as {
-        // eslint-disable-next-line no-unused-vars
         startViewTransition: (cb: () => void) => { finished: Promise<void> };
       }
     ).startViewTransition(() => {

@@ -1,4 +1,3 @@
-import type { Locale } from '../config';
 import type { ImageMetadata } from 'astro';
 
 export interface SiteConfig {
@@ -19,23 +18,14 @@ export interface SiteConfig {
   autoOgImage: boolean;
   showPrivacyPolicy: boolean;
   footer: {
-    /** Optional full override for the left footer line. Supports {year} and {author}. */
     leftText?: string;
-    /** Optional custom text shown before the theme link on the right footer line. */
     rightText?: string;
-    /** Whether to show the Privacy Policy link in the footer. */
     showPrivacyPolicy?: boolean;
-    /** Whether to show theme credits in the footer right side. */
     showThemeCredits?: boolean;
-    /** Theme label text used by the right footer link. */
     themeName: string;
-    /** Theme repository URL used by the right footer link. */
     themeUrl: string;
   };
   url: string;
-  locales: readonly Locale[];
-  defaultLocale: Locale;
-  multilingual: boolean;
 }
 
 export interface NavItem {

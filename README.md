@@ -1,203 +1,321 @@
-# Chirping Astro Starter
+# CodeWithNaman Blog
 
-A minimal starter template for [Chirping Astro](https://github.com/kannansuresh/chirping-astro) — a Chirpy-inspired, multilingual **Astro v6** blog theme with **Tailwind CSS v4**, **daisyUI v5**, **Pagefind** search, **Giscus** comments, and **KaTeX** math.
+A production-ready technical blogging platform built with [Astro](https://astro.build), TailwindCSS, and MDX. Hosted on GitHub Pages with custom domain support.
 
-> **Live demo:** [https://kannansuresh.github.io/chirping-astro](https://kannansuresh.github.io/chirping-astro)
+**Live site:** [blog.codewithnaman.com](https://blog.codewithnaman.com)
+
+## Features
+
+- **Astro 6** — Static site generation, zero JS by default
+- **TailwindCSS 4 + daisyUI 5** — Utility-first styling with professional dark theme
+- **MDX support** — Write posts in `.md` or `.mdx` with embedded components
+- **Content Collections** — Type-safe frontmatter with Zod validation
+- **Pagefind search** — Full-text search, client-side, no server needed
+- **Syntax highlighting** — Expressive Code with copy button
+- **Table of contents** — Smart scroll-spy with active section tracking
+- **SEO** — Sitemap, RSS, OpenGraph, Twitter Cards, JSON-LD structured data
+- **GitHub Pages** — Automated deployment via GitHub Actions
+- **Dark mode** — Default dark theme with light mode toggle
+- **Performance** — Lighthouse 95+ scores, minimal hydration
 
 ## Quick Start
 
-### Option 1: Astro CLI (recommended)
+### Prerequisites
+
+- Node.js 20+ and npm
+- Git
+
+### Local Setup
 
 ```bash
-bunx create-astro@latest --template kannansuresh/chirping-astro-starter
+# Clone the repository
+git clone https://github.com/<your-username>/blog.codewithnaman.com.git
+cd blog.codewithnaman.com
+
+# Install dependencies
+npm install
+
+# Start the dev server
+npm run dev
 ```
 
-The wizard will prompt you for a project name, install dependencies, and initialize git.
+Open [http://localhost:4321](http://localhost:4321) to see your blog.
 
-### Option 2: Clone directly
+## Development Workflow
+
+### Available Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start dev server with hot reload |
+| `npm run build` | Build production site to `dist/` |
+| `npm run preview` | Preview production build locally |
+| `npm run lint` | Run ESLint |
+| `npm run lint:fix` | Run ESLint with auto-fix |
+| `npm run format` | Format code with Prettier |
+| `npm run typecheck` | Run TypeScript type checking |
+
+### Pre-commit Hooks
+
+This project uses Husky + lint-staged. On every commit, staged files are automatically linted and formatted.
+
+## How to Add a Blog Post
+
+1. Create a new file in `src/content/posts/`:
 
 ```bash
-git clone https://github.com/kannansuresh/chirping-astro-starter.git my-blog
-cd my-blog
-bun install
+touch src/content/posts/my-new-post.md
 ```
 
-### Start dev server
-
-```bash
-bun dev
-```
-
-Open [http://localhost:4321](http://localhost:4321) to see your site.
-
-## Configuration
-
-1. Edit `src/config.ts` to set your site title, author name, and social links.
-2. Copy `.env.example` to `.env` and fill in your values.
-3. Replace `src/assets/images/site/avatar.svg` with your own avatar.
-4. Replace `src/assets/images/site/favicon.svg` with your own favicon.
-5. Start writing posts in `src/content/posts/en/`.
-
-## Writing Posts
-
-Create a new `.md` or `.mdx` file in `src/content/posts/en/`:
+2. Add frontmatter at the top:
 
 ```markdown
 ---
-title: 'My First Post'
-description: 'A short summary of this post.'
-pubDate: 2026-01-01
-tags: [hello, world]
-categories: [General]
+title: 'My Post Title'
+description: 'A brief description for SEO and listing cards (max 280 chars).'
+pubDate: 2026-05-15
+updatedDate: 2026-05-16
+tags: [tag1, tag2, tag3]
+categories: [Category1, Category2]
+draft: false
+toc: true
 ---
 
-Your content here...
+Your content here. Supports standard Markdown.
 ```
 
-See the included sample post for all available frontmatter fields.
+3. For MDX (with components), use `.mdx` extension:
 
-## Deploy to GitHub Pages
+```mdx
+---
+title: 'MDX Post'
+description: 'Using Astro components in posts.'
+pubDate: 2026-05-15
+tags: [mdx]
+categories: [Guide]
+---
 
-The included `.github/workflows/deploy.yml` builds your site on every push to `main`.
-Deployment runs automatically once GitHub Pages is enabled for the repository.
-To set it up:
+import Callout from '../../components/Callout.astro';
 
-### 1. Enable GitHub Pages
-
-Go to your repo **Settings → Pages → Source** and select **GitHub Actions**.
-
-> If Pages is not enabled yet, the workflow still builds but skips the deploy step.
-
-### 2. Set environment variables (optional)
-
-Go to **Settings → Environments → github-pages → Environment variables** and add any of:
-
-| Variable                    | Purpose                               | Default                        |
-| --------------------------- | ------------------------------------- | ------------------------------ |
-| `SITE_URL`                  | Your production URL                   | `https://<username>.github.io` |
-| `BASE_PATH`                 | Sub-path for the site                 | `/<repo-name>`                 |
-| `PUBLIC_GITHUB_HANDLE`      | GitHub profile link in sidebar        | Your GitHub username           |
-| `PUBLIC_TWITTER_HANDLE`     | Twitter/X link in sidebar             | _(none)_                       |
-| `PUBLIC_CONTACT_EMAIL`      | Email link in sidebar                 | _(none)_                       |
-| `PUBLIC_GISCUS_ENABLED`     | Enable comments (`true`/`false`)      | _(none)_                       |
-| `PUBLIC_GISCUS_REPO`        | `owner/repo` for Giscus               | _(none)_                       |
-| `PUBLIC_GISCUS_REPO_ID`     | From [giscus.app](https://giscus.app) | _(none)_                       |
-| `PUBLIC_GISCUS_CATEGORY`    | Discussion category name              | _(none)_                       |
-| `PUBLIC_GISCUS_CATEGORY_ID` | From [giscus.app](https://giscus.app) | _(none)_                       |
-
-> **Note:** All variables are optional. The site builds and deploys with zero configuration — variables just enable extra features.
-
-### 3. Customize the Privacy Policy (optional)
-
-Edit the bilingual privacy policy templates:
-
-```text
-src/content/pages/en/privacy.md
-src/content/pages/fr/privacy.md
+<Callout type="info">This is a callout component in your post!</Callout>
 ```
 
-Replace placeholder values in `[BRACKETS]` (site name, contact email, etc.).
-The privacy policy appears in the footer with a link — disable it by setting
-`showPrivacyPolicy: false` in `src/config.ts`.
+### Frontmatter Fields
 
-### 4. Push to `main`
+| Field | Required | Type | Description |
+|-------|----------|------|-------------|
+| `title` | Yes | string | Post title (1-140 chars) |
+| `description` | Yes | string | Meta description (1-280 chars) |
+| `pubDate` | Yes | date | Publication date |
+| `updatedDate` | No | date | Last updated date |
+| `tags` | No | string[] | Tags for grouping and related posts |
+| `categories` | No | string[] | Categories for navigation |
+| `draft` | No | boolean | Hide from production builds (default: false) |
+| `toc` | No | boolean | Show table of contents (default: true) |
+| `heroImage` | No | string/image | Featured image path or URL |
+| `heroImageAlt` | No | string | Alt text for hero image |
+| `comments` | No | boolean | Enable/disable comments per post |
+| `math` | No | boolean | Enable KaTeX math rendering |
 
-That's it. The workflow will build and deploy your site. Your site will be available at `https://<username>.github.io/<repo-name>/`.
+### Draft Posts
 
-### 5. Run (or re-run) the deploy workflow after enabling Pages
+Set `draft: true` to hide a post from production builds. Draft posts are visible during development (`npm run dev`).
 
-If your first workflow run happened before step 1, deploy was skipped by design.
-After enabling Pages, trigger deployment with either option:
+## Deployment
 
-1. Push any new commit to `main`.
-2. Or go to **Actions → Deploy to GitHub Pages → Run workflow**.
+### GitHub Pages (Recommended)
 
-The next run will execute the deploy job and publish your site.
+The project includes a GitHub Actions workflow that builds and deploys on every push to `main`.
 
-## Custom Domain
+#### Step 1: Push to GitHub
 
-### Dedicated domain for this site
-
-To use your own domain (e.g., `https://blog.example.com`) exclusively for this site:
-
-1. Set `SITE_URL` = `https://blog.example.com`
-2. Set `BASE_PATH` to empty (or `/`).
-3. Configure your DNS — see [GitHub's custom domain docs](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site).
-
-### Using a custom domain on your GitHub user site
-
-If your GitHub user site (`<username>.github.io`) already points to a custom domain (e.g., `example.com`), then **all project sites** under that account are automatically served under that domain:
-
-```text
-username.github.io        → example.com          (user site)
-username.github.io/blog   → example.com/blog     (this repo)
+```bash
+git remote add origin https://github.com/<your-username>/blog.codewithnaman.com.git
+git branch -M main
+git push -u origin main
 ```
 
-In this case, you don't need any extra DNS setup. Just set:
+#### Step 2: Enable GitHub Pages
 
-- `SITE_URL` = `https://example.com`
-- `BASE_PATH` = `/<repo-name>` (e.g., `/blog`)
+1. Go to your repository **Settings → Pages**
+2. Under **Source**, select **GitHub Actions**
+3. The workflow will automatically deploy on the next push
 
-The deploy workflow already defaults `BASE_PATH` to `/<repo-name>`, so if you're happy with `example.com/<repo-name>/` as your blog URL, **no configuration is needed at all** — it works out of the box.
+#### Step 3: Set Environment Variables (Optional)
 
-## Giscus Comments
+Go to **Settings → Environments → github-pages → Environment variables** and add:
 
-To enable GitHub Discussions-powered comments on posts:
+| Variable | Purpose |
+|----------|---------|
+| `SITE_URL` | Your production URL (default: `https://blog.codewithnaman.com`) |
+| `PUBLIC_GITHUB_HANDLE` | Your GitHub username (shows GitHub icon in sidebar) |
+| `PUBLIC_TWITTER_HANDLE` | Your Twitter/X handle |
+| `PUBLIC_CONTACT_EMAIL` | Contact email |
+| `PUBLIC_GISCUS_ENABLED` | Set to `true` to enable comments |
+| `PUBLIC_GISCUS_REPO` | GitHub repo for comments (e.g., `user/repo`) |
+| `PUBLIC_GISCUS_REPO_ID` | From [giscus.app](https://giscus.app) |
+| `PUBLIC_GISCUS_CATEGORY` | Discussion category name |
+| `PUBLIC_GISCUS_CATEGORY_ID` | From [giscus.app](https://giscus.app) |
 
-1. Install the [Giscus app](https://github.com/apps/giscus) on your repo.
-2. Go to [giscus.app](https://giscus.app), fill in your repo details, and copy the generated values.
-3. Add these environment variables in **Settings → Environments → github-pages**:
-   - `PUBLIC_GISCUS_ENABLED` = `true`
-   - `PUBLIC_GISCUS_REPO` = `your-username/your-repo`
-   - `PUBLIC_GISCUS_REPO_ID` = _(from giscus.app)_
-   - `PUBLIC_GISCUS_CATEGORY` = `Announcements` _(or your chosen category)_
-   - `PUBLIC_GISCUS_CATEGORY_ID` = _(from giscus.app)_
+## GitHub Pages Setup
 
-## Single Language Mode
+### Using a Custom Domain (Recommended)
 
-This starter ships with English + French (i18n). To run a single-language site:
+This project is pre-configured for `blog.codewithnaman.com`. The `public/CNAME` file contains the domain, and the deploy workflow preserves it.
 
-1. Open `src/config.ts` and set `multilingual: false`.
-2. Delete the `src/content/posts/fr/` folder (and `src/content/pages/fr/` if present).
-3. Remove the `src/pages/fr/` directory.
+1. The `public/CNAME` file already contains `blog.codewithnaman.com`
+2. After deploying, go to **Settings → Pages → Custom domain**
+3. Enter `blog.codewithnaman.com` and click **Save**
+4. Check **Enforce HTTPS**
 
-The language switcher will disappear and all `hreflang` tags are omitted.
+### Using GitHub Pages Subdomain (No Custom Domain)
 
-## Customization
+If you don't have a custom domain:
 
-| What                            | Where                                   |
-| ------------------------------- | --------------------------------------- |
-| Site title, description, author | `src/config.ts` → `SITE`                |
-| Navigation links                | `src/config.ts` → `NAV`                 |
-| Social links                    | `src/config.ts` → `SOCIAL`              |
-| Avatar image                    | `src/assets/images/site/avatar.svg`     |
-| Favicon                         | `src/assets/images/site/favicon.svg`    |
-| Default OG image                | `src/assets/images/site/og-default.svg` |
-| Global styles                   | `src/styles/global.css`                 |
-| Theme colors                    | daisyUI theme tokens in `global.css`    |
+1. Delete `public/CNAME`
+2. Set `BASE_PATH` in `.github/workflows/deploy.yml` to `/<repo-name>`
+3. Update `SITE_URL` in environment variables to `https://<username>.github.io/<repo-name>`
 
-## Commands
+## DNS Setup
 
-| Command          | Action                               |
-| ---------------- | ------------------------------------ |
-| `bun dev`        | Start dev server at `localhost:4321` |
-| `bun run build`  | Build production site to `./dist/`   |
-| `bun preview`    | Preview production build locally     |
-| `bun run lint`   | Run ESLint                           |
-| `bun run format` | Format with Prettier                 |
+### Squarespace Domain
 
-## Documentation
+If your domain is registered with Squarespace:
 
-For full documentation on all features (i18n, dark mode, math, comments, OG images, etc.), see the [main repository README](https://github.com/kannansuresh/chirping-astro#readme).
+1. Log in to your Squarespace account
+2. Go to **Settings → Domains**
+3. Click your domain → **DNS Settings**
+4. Add the following records:
 
-## Contributing & Issues
+| Type | Host | Value |
+|------|------|-------|
+| CNAME | `blog` | `<your-username>.github.io` |
 
-> **This starter repository is automatically synced from the [main Chirping Astro repository](https://github.com/kannansuresh/chirping-astro).** Please do not open pull requests here — changes will be overwritten on the next sync.
+5. Wait up to 48 hours for DNS propagation
 
-- **Found a bug?** [Open an issue](https://github.com/kannansuresh/chirping-astro/issues) on the main repository.
-- **Want to contribute?** See the [contributing guide](https://github.com/kannansuresh/chirping-astro/blob/main/CONTRIBUTING.md) on the main repository.
-- **Have a question?** Use [Discussions](https://github.com/kannansuresh/chirping-astro/discussions) on the main repository.
+### Other Domain Registrars
+
+For any registrar (Namecheap, GoDaddy, Cloudflare, etc.):
+
+1. Add a CNAME record:
+   - **Host/Name:** `blog`
+   - **Value:** `<your-username>.github.io`
+   - **TTL:** Automatic or 3600
+
+2. Alternatively, use A records pointing to GitHub Pages IPs:
+   - `185.199.108.153`
+   - `185.199.109.153`
+   - `185.199.110.153`
+   - `185.199.111.153`
+
+## Custom Domain Setup
+
+### Step-by-Step
+
+1. **Update `public/CNAME`** with your domain:
+   ```
+   blog.yourdomain.com
+   ```
+
+2. **Update `SITE_URL`** in `.env.example` and GitHub environment variables:
+   ```
+   SITE_URL=https://blog.yourdomain.com
+   ```
+
+3. **Configure DNS** (see DNS Setup above)
+
+4. **Deploy** — push to `main` and the workflow will deploy with your CNAME
+
+5. **Verify** — visit your domain and check that HTTPS is enabled
+
+### Troubleshooting
+
+- **DNS not propagating:** Use `dig blog.yourdomain.com` to check
+- **HTTPS not working:** Go to GitHub Pages settings and click "Enforce HTTPS" (may take up to 24 hours after DNS propagation)
+- **404 errors:** Ensure `public/.nojekyll` exists (prevents GitHub from running Jekyll)
+
+## How to Customize Branding
+
+### Site Title, Author, Tagline
+
+Edit `src/config.ts`:
+
+```typescript
+export const SITE: SiteConfig = {
+  title: 'Your Blog Name',
+  description: 'Your tagline here.',
+  author: {
+    name: 'Your Name',
+    bio: 'Your bio.',
+  },
+  // ...
+};
+```
+
+### Social Links
+
+Set environment variables in `.env` or GitHub settings:
+
+```env
+PUBLIC_GITHUB_HANDLE=yourusername
+PUBLIC_TWITTER_HANDLE=yourhandle
+PUBLIC_CONTACT_EMAIL=you@example.com
+```
+
+### Avatar & Favicon
+
+Replace these files:
+- `src/assets/images/site/avatar.svg` — Sidebar avatar
+- `src/assets/images/site/favicon.svg` — Browser favicon
+- `src/assets/images/site/og-default.svg` — Default OpenGraph image
+
+### Theme Colors
+
+Edit `src/styles/global.css` — look for the `@plugin 'daisyui/theme'` blocks to customize the color palette.
+
+### Navigation
+
+Edit the `NAV` array in `src/config.ts`:
+
+```typescript
+export const NAV: readonly NavItem[] = [
+  { key: 'home', href: '/', icon: 'lucide:home' },
+  { key: 'posts', href: '/posts', icon: 'lucide:file-text' },
+  // Add or remove items here
+] as const;
+```
+
+### UI Text
+
+Edit `src/i18n/ui.ts` to customize all UI strings (navigation labels, button text, etc.).
+
+## Project Structure
+
+```
+src/
+├── assets/images/       # Static images (avatar, favicon, OG)
+├── components/          # Astro components
+│   ├── islands/         # Interactive islands (client-side JS)
+│   └── ...
+├── content/posts/       # Blog posts (.md / .mdx)
+├── layouts/             # Page layouts
+├── pages/               # Astro pages (file-based routing)
+├── styles/              # Global CSS
+└── utils/               # Utility functions
+public/
+├── .nojekyll            # Bypass Jekyll on GitHub Pages
+├── CNAME                # Custom domain
+└── robots.txt           # SEO robots configuration
+```
+
+## Architecture Decisions
+
+- **Static-first** — All pages are pre-rendered at build time. Zero server runtime.
+- **Islands architecture** — Only interactive components (search, TOC, theme toggle) ship JavaScript.
+- **Single language** — Simplified from the starter's multilingual setup for better performance and maintainability.
+- **Dark mode default** -- Professional engineering blog aesthetic with dark theme as the default.
+- **npm over bun** — Broader compatibility and ecosystem support.
 
 ## License
 
-MIT — see [LICENSE](./LICENSE).
+MIT

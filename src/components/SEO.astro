@@ -1,6 +1,6 @@
 ---
 import { SITE } from '../config';
-import { localizedPath, withBase } from '../i18n/utils';
+import { withBase } from '../i18n/utils';
 import type { SeoMeta } from '../utils/seo';
 
 interface Props {
@@ -10,21 +10,11 @@ interface Props {
 const { meta } = Astro.props;
 
 // Feed auto-discovery — feed readers and browser extensions look for
-// these <link rel="alternate"> tags in <head>. We advertise the active
-// locale's feed as the primary one, and (when multilingual) every other
-// locale's feed too.
+// these <link rel="alternate"> tags in <head>.
 const primaryFeed = {
-  href: localizedPath('/rss.xml', meta.locale),
-  title: `${SITE.title}${meta.locale === 'fr' ? ' (FR)' : ''} — RSS`,
+  href: withBase('/rss.xml'),
+  title: `${SITE.title} — RSS`,
 };
-const otherFeeds = SITE.multilingual
-  ? SITE.locales
-      .filter((l) => l !== meta.locale)
-      .map((l) => ({
-        href: localizedPath('/rss.xml', l),
-        title: `${SITE.title}${l === 'fr' ? ' (FR)' : ''} — RSS`,
-      }))
-  : [];
 const sitemapHref = withBase('/sitemap-index.xml');
 ---
 
@@ -39,11 +29,6 @@ const sitemapHref = withBase('/sitemap-index.xml');
   title={primaryFeed.title}
   href={primaryFeed.href}
 />
-{
-  otherFeeds.map((f) => (
-    <link rel="alternate" type="application/rss+xml" title={f.title} href={f.href} />
-  ))
-}
 <link rel="sitemap" type="application/xml" href={sitemapHref} />
 
 {/* Open Graph */}
@@ -53,7 +38,7 @@ const sitemapHref = withBase('/sitemap-index.xml');
 <meta property="og:type" content={meta.type} />
 <meta property="og:url" content={meta.canonical} />
 <meta property="og:image" content={meta.ogImage} />
-<meta property="og:locale" content={meta.locale === 'fr' ? 'fr_FR' : 'en_US'} />
+<meta property="og:locale" content="en_US" />
 
 {/* Twitter */}
 <meta name="twitter:card" content="summary_large_image" />
@@ -73,9 +58,3 @@ const sitemapHref = withBase('/sitemap-index.xml');
   )
 }
 {meta.type === 'article' && meta.tags?.map((tag) => <meta property="article:tag" content={tag} />)}
-
-{/* hreflang alternates for SEO */}
-{
-  SITE.multilingual &&
-    meta.hreflangs.map(({ locale, href }) => <link rel="alternate" hreflang={locale} href={href} />)
-}

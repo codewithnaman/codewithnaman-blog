@@ -1,5 +1,4 @@
 ---
-import type { Locale } from '../config';
 import { useTranslations } from '../i18n/utils';
 import { type Post, postPath } from '../utils/posts';
 import { Icon } from 'astro-icon/components';
@@ -7,11 +6,10 @@ import { Icon } from 'astro-icon/components';
 interface Props {
   prev?: Post;
   next?: Post;
-  locale: Locale;
 }
 
-const { prev, next, locale } = Astro.props;
-const t = useTranslations(locale);
+const { prev, next } = Astro.props;
+const t = useTranslations();
 ---
 
 <nav

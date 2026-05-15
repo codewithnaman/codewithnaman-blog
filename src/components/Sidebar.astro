@@ -5,27 +5,22 @@
  * pinned to the bottom.
  */
 
-import { SITE, NAV, SOCIALS, type Locale } from '../config';
-import { useTranslations, localizedPath, withBase } from '../i18n/utils';
+import { SITE, NAV, SOCIALS } from '../config';
+import { useTranslations, withBase } from '../i18n/utils';
 import type { UIKey } from '../i18n/ui';
 import { Icon } from 'astro-icon/components';
 import { Image } from 'astro:assets';
 import ThemeToggle from './islands/ThemeToggle.astro';
 
-interface Props {
-  locale: Locale;
-}
-
-const { locale } = Astro.props;
-const t = useTranslations(locale);
-const home = localizedPath('/', locale);
+const t = useTranslations();
+const home = '/';
 const avatar = SITE.author.avatar;
 const isStringAvatar = typeof avatar === 'string';
 const avatarSrc = isStringAvatar ? avatar.trim() : '';
 
 const navItems = NAV.map((item) => ({
   ...item,
-  href: localizedPath(item.href, locale),
+  href: item.href,
   label: t(`nav.${item.key}` as UIKey),
 }));
 ---
@@ -110,7 +105,7 @@ const navItems = NAV.map((item) => ({
   <div
     class="border-base-300 mt-4 flex w-full flex-wrap items-center justify-center gap-2 border-t pt-4"
   >
-    <ThemeToggle locale={locale} />
+    <ThemeToggle />
     {
       SOCIALS.map((s) => (
         <a

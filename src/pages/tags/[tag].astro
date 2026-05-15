@@ -1,0 +1,34 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PostList from '~/components/PostList.astro';
+import { useTranslations } from '~/i18n/utils';
+import { getPosts, getTagsWithCount, slugify } from '~/utils/posts';
+
+export async function getStaticPaths() {
+  const tags = await getTagsWithCount();
+  return tags.map((tag) => ({
+    params: { tag: slugify(tag.name) },
+    props: { tagName: tag.name },
+  }));
+}
+
+const { tagName } = Astro.props;
+const { tag } = Astro.params;
+const t = useTranslations();
+const posts = (await getPosts()).filter((p) => p.data.tags.some((tg) => slugify(tg) === tag));
+---
+
+<BaseLayout
+  title={`#${tagName}`}
+  crumbs={[{ label: t('tags.title'), href: '/tags/' }, { label: `#${tagName}` }]}
+>
+  <header class="mb-6">
+    <p class="text-base-content/70 text-sm tracking-wide uppercase">{t('list.tagPosts')}</p>
+    <h1 class="text-3xl font-bold tracking-tight">#{tagName}</h1>
+    <p class="text-base-content/70 mt-1 text-sm">
+      {posts.length}
+      {posts.length === 1 ? t('list.totalPostsOne') : t('list.totalPosts')}
+    </p>
+  </header>
+  <PostList posts={posts} />
+</BaseLayout>
