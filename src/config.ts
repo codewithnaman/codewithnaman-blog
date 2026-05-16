@@ -20,7 +20,7 @@ export const SITE: SiteConfig = {
   description: 'Engineering, System Design, FinTech, Cloud & AI — a technical blog by Naman Gupta.',
   author: {
     name: 'Naman Gupta',
-    url: GITHUB_HANDLE ? `https://github.com/${GITHUB_HANDLE}` : undefined,
+    url: 'https://codewithnaman.com',
     avatar: avatarImg,
   },
   defaultOgImage: undefined,

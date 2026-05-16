@@ -9,6 +9,7 @@ export interface Author {
   github?: string;
   twitter?: string;
   linkedin?: string;
+  website?: string;
 }
 
 const authors: Record<string, Author> = {
@@ -21,6 +22,7 @@ const authors: Record<string, Author> = {
     github: 'https://github.com/codewithnaman',
     twitter: 'https://twitter.com/codewithnaman',
     linkedin: 'https://www.linkedin.com/in/codewithnaman/',
+    website: 'https://codewithnaman.com',
   },
   'vikas-pathneja': {
     slug: 'vikas-pathneja',

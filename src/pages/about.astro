@@ -65,6 +65,11 @@ const teamMembers = getAllAuthors();
           bio={member.bio}
           avatarUrl={member.avatarUrl}
           socials={[
+            member.website && {
+              label: 'Website',
+              href: member.website,
+              icon: 'lucide:globe',
+            },
             member.github && {
               label: 'GitHub',
               href: member.github,

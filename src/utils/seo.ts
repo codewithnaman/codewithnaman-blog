@@ -14,6 +14,8 @@ export interface SeoMeta {
   publishedTime?: string;
   modifiedTime?: string;
   tags?: string[];
+  twitterCreator?: string;
+  section?: string;
 }
 
 interface BuildSeoArgs {
@@ -29,6 +31,8 @@ interface BuildSeoArgs {
   publishedTime?: Date;
   modifiedTime?: Date;
   tags?: string[];
+  twitterCreator?: string;
+  section?: string;
 }
 
 /** Build the SEO data block consumed by `<SEO />`. */
@@ -49,5 +53,7 @@ export function buildSeo(args: BuildSeoArgs): SeoMeta {
     publishedTime: args.publishedTime?.toISOString(),
     modifiedTime: args.modifiedTime?.toISOString(),
     tags: args.tags,
+    twitterCreator: args.twitterCreator,
+    section: args.section,
   };
 }

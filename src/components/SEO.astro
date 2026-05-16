@@ -20,7 +20,9 @@ const sitemapHref = withBase('/sitemap-index.xml');
 
 <title>{meta.title}</title>
 <meta name="description" content={meta.description} />
+<meta name="author" content={SITE.author.name} />
 <link rel="canonical" href={meta.canonical} />
+<link rel="alternate" hreflang="en" href={meta.canonical} />
 
 {/* Feed + sitemap auto-discovery */}
 <link
@@ -48,6 +50,7 @@ const sitemapHref = withBase('/sitemap-index.xml');
 <meta name="twitter:title" content={meta.title} />
 <meta name="twitter:description" content={meta.description} />
 <meta name="twitter:image" content={meta.ogImage} />
+{meta.twitterCreator && <meta name="twitter:creator" content={meta.twitterCreator} />}
 
 {/* Article-specific */}
 {
@@ -66,3 +69,4 @@ const sitemapHref = withBase('/sitemap-index.xml');
   )
 }
 {meta.type === 'article' && meta.tags?.map((tag) => <meta property="article:tag" content={tag} />)}
+{meta.section && <meta property="article:section" content={meta.section} />}

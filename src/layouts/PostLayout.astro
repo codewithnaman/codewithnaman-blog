@@ -46,6 +46,9 @@ const heroAsset = heroImage(post);
 const showHero = shouldShowHero(post);
 const heroAlt = post.data.heroImageAlt ?? '';
 
+const logoRaw = SITE.author.avatar;
+const logoUrl = typeof logoRaw === 'string' ? logoRaw : (logoRaw as ImageMetadata | undefined)?.src;
+
 const articleClass = SITE.boxedArticles
   ? 'border-base-300 bg-base-100 rounded-md border px-5 py-8 sm:px-8 sm:py-10'
   : 'px-1 py-6 sm:px-2 sm:py-8';
@@ -74,6 +77,8 @@ const seo = buildSeo({
   publishedTime: post.data.pubDate,
   modifiedTime: post.data.updatedDate,
   tags: post.data.tags,
+  twitterCreator: author.twitter ? `@${author.twitter.split('/').pop()}` : undefined,
+  section: post.data.categories[0],
 });
 
 const postUrl = new URL(Astro.url.pathname, SITE.url).toString();
@@ -88,12 +93,15 @@ const jsonLd = {
   author: {
     '@type': 'Person',
     name: author.name,
-    url: SITE.url,
+    url: author.website ?? SITE.author.url,
   },
   publisher: {
     '@type': 'Organization',
     name: SITE.author.name,
-    url: SITE.url,
+    url: SITE.author.url,
+    ...(logoUrl && {
+      logo: { '@type': 'ImageObject', url: new URL(logoUrl, SITE.url).toString() },
+    }),
   },
   ...(post.data.tags.length > 0 && { keywords: post.data.tags.join(', ') }),
   ...(heroSrc && { image: { '@type': 'ImageObject', url: new URL(heroSrc, SITE.url).toString() } }),
