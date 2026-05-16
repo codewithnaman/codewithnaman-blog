@@ -107,6 +107,14 @@ const jsonLd = {
   ...(heroSrc && { image: { '@type': 'ImageObject', url: new URL(heroSrc, SITE.url).toString() } }),
 };
 
+const speakableJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SpeakableSpecification',
+  name: post.data.title,
+  description: post.data.description,
+  cssSelector: ['h1', '.prose-chirpy > p:first-of-type'],
+};
+
 const crumbs = [{ label: t('nav.posts'), href: '/' }, { label: post.data.title }];
 ---
 
@@ -123,6 +131,7 @@ const crumbs = [{ label: t('nav.posts'), href: '/' }, { label: post.data.title }
 >
   <ScrollProgress />
   <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(speakableJsonLd)} />
   {post.data.math && <MathStyles />}
   {
     post.data.toc && headings.length > 0 && (

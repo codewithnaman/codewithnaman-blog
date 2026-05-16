@@ -2,13 +2,18 @@
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import { useTranslations } from '~/i18n/utils';
 import { getCategoriesWithCount, categoryPath } from '~/utils/posts';
+import { SITE } from '~/config';
 import { Icon } from 'astro-icon/components';
 
 const t = useTranslations();
 const categories = await getCategoriesWithCount();
 ---
 
-<BaseLayout title={t('categories.title')} crumbs={[{ label: t('categories.title') }]}>
+<BaseLayout
+  title={`All Categories — ${SITE.title}`}
+  description={`Browse all article categories on ${SITE.title}.`}
+  crumbs={[{ label: t('categories.title') }]}
+>
   <header class="mb-6">
     <h1 class="text-3xl font-bold tracking-tight">{t('categories.title')}</h1>
   </header>

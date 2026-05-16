@@ -16,6 +16,7 @@ export interface SeoMeta {
   tags?: string[];
   twitterCreator?: string;
   section?: string;
+  noindex?: boolean;
 }
 
 interface BuildSeoArgs {
@@ -33,6 +34,7 @@ interface BuildSeoArgs {
   tags?: string[];
   twitterCreator?: string;
   section?: string;
+  noindex?: boolean;
 }
 
 /** Build the SEO data block consumed by `<SEO />`. */
@@ -55,5 +57,6 @@ export function buildSeo(args: BuildSeoArgs): SeoMeta {
     tags: args.tags,
     twitterCreator: args.twitterCreator,
     section: args.section,
+    noindex: args.noindex,
   };
 }

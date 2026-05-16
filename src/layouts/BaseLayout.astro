@@ -32,6 +32,8 @@ interface Props {
   crumbs?: Array<{ label: string; href?: string }>;
   /** Pre-built SEO meta override. */
   seo?: SeoMeta;
+  /** Prevent search engines from indexing this page. */
+  noindex?: boolean;
 }
 
 const {
@@ -47,6 +49,7 @@ const {
   narrow = false,
   crumbs = [],
   seo,
+  noindex = false,
 } = Astro.props;
 
 const t = useTranslations();
@@ -70,7 +73,20 @@ const meta: SeoMeta =
     publishedTime,
     modifiedTime,
     tags,
+    noindex,
   });
+
+const webPageJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  '@id': `${SITE.url}${pathWithoutLocale}#webpage`,
+  url: `${SITE.url}${pathWithoutLocale}`,
+  name: meta.title,
+  description: meta.description,
+  isPartOf: { '@id': `${SITE.url}/#website` },
+  ...(type === 'article' && publishedTime && { datePublished: publishedTime.toISOString() }),
+  ...(type === 'article' && modifiedTime && { dateModified: modifiedTime.toISOString() }),
+};
 ---
 
 <!doctype html>
@@ -81,6 +97,8 @@ const meta: SeoMeta =
     <meta name="theme-color" content="#1b1b1e" />
     <link rel="icon" type="image/x-icon" href={withBase('/favicon.ico')} />
     <SEO meta={meta} />
+    {/* JSON-LD: WebPage */}
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(webPageJsonLd)} />
     {/* JSON-LD: WebSite + Organization */}
     <script
       type="application/ld+json"
@@ -94,6 +112,7 @@ const meta: SeoMeta =
             url: SITE.url,
             name: SITE.title,
             description: SITE.description,
+            datePublished: '2024-01-01T00:00:00Z',
             publisher: { '@id': `${SITE.url}/#organization` },
           },
           {

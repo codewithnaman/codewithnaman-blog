@@ -23,7 +23,7 @@ export const SITE: SiteConfig = {
     url: 'https://codewithnaman.com',
     avatar: avatarImg,
   },
-  defaultOgImage: undefined,
+  defaultOgImage: '/og/default.png',
   postsPerPage: 8,
   isoDates: false,
   showFeaturedImages: true,

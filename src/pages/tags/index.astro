@@ -2,13 +2,18 @@
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import { useTranslations } from '~/i18n/utils';
 import { getTagsWithCount, tagPath } from '~/utils/posts';
+import { SITE } from '~/config';
 import { Icon } from 'astro-icon/components';
 
 const t = useTranslations();
 const tags = await getTagsWithCount();
 ---
 
-<BaseLayout title={t('tags.title')} crumbs={[{ label: t('tags.title') }]}>
+<BaseLayout
+  title={`All Tags — ${SITE.title}`}
+  description={`Browse all topics and tags covered on ${SITE.title}.`}
+  crumbs={[{ label: t('tags.title') }]}
+>
   <header class="mb-6">
     <h1 class="text-3xl font-bold tracking-tight">{t('tags.title')}</h1>
   </header>

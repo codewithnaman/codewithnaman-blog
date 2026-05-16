@@ -1,4 +1,10 @@
 User-agent: *
 Allow: /
 
-Sitemap: /sitemap-index.xml
+# Disallow common non-content paths
+Disallow: /_astro/
+Disallow: /_pagefind/
+Disallow: /rss/
+
+# Sitemap location
+Sitemap: https://blog.codewithnaman.com/sitemap-index.xml

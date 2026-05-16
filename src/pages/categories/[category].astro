@@ -2,7 +2,8 @@
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import PostList from '~/components/PostList.astro';
 import { useTranslations } from '~/i18n/utils';
-import { getPosts, getCategoriesWithCount, slugify } from '~/utils/posts';
+import { getPosts, getCategoriesWithCount, slugify, postPath } from '~/utils/posts';
+import { SITE } from '~/config';
 
 export async function getStaticPaths() {
   const categories = await getCategoriesWithCount();
@@ -18,12 +19,26 @@ const t = useTranslations();
 const posts = (await getPosts()).filter(
   (p) => p.data.categories && p.data.categories.some((c) => slugify(c) === category),
 );
+
+const itemListJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: `${categoryName} Articles — ${SITE.title}`,
+  itemListElement: posts.map((post, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    url: new URL(postPath(post), SITE.url).toString(),
+    name: post.data.title,
+  })),
+};
 ---
 
 <BaseLayout
-  title={categoryName}
+  title={`${categoryName} Articles — ${SITE.title}`}
+  description={`Explore ${categoryName} articles on ${SITE.title}.`}
   crumbs={[{ label: t('categories.title'), href: '/categories/' }, { label: categoryName }]}
 >
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(itemListJsonLd)} />
   <header class="mb-6">
     <p class="text-base-content/70 text-sm tracking-wide uppercase">{t('list.categoryPosts')}</p>
     <h1 class="text-3xl font-bold tracking-tight">{categoryName}</h1>

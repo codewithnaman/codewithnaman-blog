@@ -23,6 +23,7 @@ const sitemapHref = withBase('/sitemap-index.xml');
 <meta name="author" content={SITE.author.name} />
 <link rel="canonical" href={meta.canonical} />
 <link rel="alternate" hreflang="en" href={meta.canonical} />
+{meta.noindex && <meta name="robots" content="noindex, follow" />}
 
 {/* Feed + sitemap auto-discovery */}
 <link

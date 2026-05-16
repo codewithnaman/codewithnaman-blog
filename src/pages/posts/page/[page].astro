@@ -4,7 +4,7 @@ import PostList from '~/components/PostList.astro';
 import Pagination from '~/components/Pagination.astro';
 import { SITE } from '~/config';
 import { useTranslations } from '~/i18n/utils';
-import { getPostsByDate } from '~/utils/posts';
+import { getPostsByDate, postPath } from '~/utils/posts';
 
 interface Props {
   current: number;
@@ -32,9 +32,26 @@ const start = (current - 1) * pageSize;
 const pagePosts = allPosts.slice(start, start + pageSize);
 
 const hrefForPage = (n: number) => (n === 1 ? '/posts/' : `/posts/page/${n}/`);
+
+const itemListJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: `${t('nav.posts')} — Page ${current} of ${last} — ${SITE.title}`,
+  itemListElement: pagePosts.map((post, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    url: new URL(postPath(post), SITE.url).toString(),
+    name: post.data.title,
+  })),
+};
 ---
 
-<BaseLayout title={`${t('nav.posts')} — ${t('pagination.page')} ${current}`}>
+<BaseLayout
+  title={`${t('nav.posts')} — Page ${current} of ${last} — ${SITE.title}`}
+  description={`Page ${current} of all posts on ${SITE.title}.`}
+  noindex={current > 1}
+>
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(itemListJsonLd)} />
   <header class="mb-6">
     <h1 class="text-3xl font-bold tracking-tight">{t('nav.posts')}</h1>
     <p class="text-base-content/70 text-sm">

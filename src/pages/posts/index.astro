@@ -3,7 +3,7 @@ import BaseLayout from '~/layouts/BaseLayout.astro';
 import PostList from '~/components/PostList.astro';
 import Pagination from '~/components/Pagination.astro';
 import { SITE } from '~/config';
-import { getPostsByDate } from '~/utils/posts';
+import { getPostsByDate, postPath } from '~/utils/posts';
 import { useTranslations } from '~/i18n/utils';
 
 const t = useTranslations();
@@ -14,9 +14,26 @@ const currentPage = 1;
 const pagePosts = allPosts.slice(0, pageSize);
 
 const hrefForPage = (n: number) => (n === 1 ? '/posts/' : `/posts/page/${n}/`);
+
+const itemListJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: `${t('nav.posts')} — ${SITE.title}`,
+  itemListElement: pagePosts.map((post, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    url: new URL(postPath(post), SITE.url).toString(),
+    name: post.data.title,
+  })),
+};
 ---
 
-<BaseLayout title={`${t('nav.posts')} — ${SITE.title}`} crumbs={[{ label: t('nav.posts') }]}>
+<BaseLayout
+  title={`${t('nav.posts')} — ${SITE.title}`}
+  description="Browse all technical articles on engineering, system design, FinTech, cloud, and AI."
+  crumbs={[{ label: t('nav.posts') }]}
+>
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(itemListJsonLd)} />
   <PostList posts={pagePosts} />
   <Pagination currentPage={currentPage} lastPage={lastPage} hrefForPage={hrefForPage} />
 </BaseLayout>
