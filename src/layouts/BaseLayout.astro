@@ -22,8 +22,10 @@ interface Props {
   publishedTime?: Date;
   modifiedTime?: Date;
   tags?: string[];
-  /** Hide the right panel (e.g. on post pages where TOC takes its place). */
+  /** Hide the right panel entirely. */
   hidePanel?: boolean;
+  /** Hide only the default Panel widget (Recently Updated + Trending Tags), keeping the rail for slot content like TOC. */
+  hideDefaultPanel?: boolean;
   /** Constrain main content width (used by Pages like About/404). */
   narrow?: boolean;
   /** Breadcrumb segments shown in the topbar. */
@@ -41,6 +43,7 @@ const {
   modifiedTime,
   tags,
   hidePanel = false,
+  hideDefaultPanel = false,
   narrow = false,
   crumbs = [],
   seo,
@@ -150,6 +153,21 @@ const meta: SeoMeta =
         document.addEventListener('astro:after-swap', applyTheme);
       })();
     </script>
+    {/* Restore sidebar collapse state early to avoid layout shift. */}
+    <script is:inline>
+      (function () {
+        try {
+          if (
+            localStorage.getItem('sidebar-collapsed') === 'true' &&
+            window.matchMedia('(min-width: 1024px)').matches
+          ) {
+            document.documentElement.setAttribute('data-sidebar-collapsed', '');
+          }
+        } catch {
+          /* ignore */
+        }
+      })();
+    </script>
   </head>
 
   <body>
@@ -182,7 +200,7 @@ const meta: SeoMeta =
           {
             !hidePanel && (
               <aside class="chirpy-panel-rail" aria-label="Sidebar widgets">
-                <Panel />
+                {!hideDefaultPanel && <Panel />}
                 <slot name="aside-bottom" />
               </aside>
             )

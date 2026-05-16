@@ -1,8 +1,8 @@
 ---
 /**
- * Chirpy-style fixed left sidebar: avatar + site title + tagline,
+ * Chirpy-style fixed left sidebar: logo + tagline,
  * uppercase vertical nav with icon bullets, theme toggle + social
- * pinned to the bottom.
+ * pinned to the bottom. Collapsible to icon-only mode.
  */
 
 import { SITE, NAV, SOCIALS } from '../config';
@@ -15,9 +15,6 @@ import cwnLogo from '../assets/images/site/CWN Logo.png';
 
 const t = useTranslations();
 const home = '/';
-const avatar = SITE.author.avatar;
-const isStringAvatar = typeof avatar === 'string';
-const avatarSrc = isStringAvatar ? avatar.trim() : '';
 
 const navItems = NAV.map((item) => ({
   ...item,
@@ -28,58 +25,44 @@ const navItems = NAV.map((item) => ({
 
 <aside id="sidebar" class="chirpy-sidebar" aria-label="Sidebar">
   {/* Profile */}
-  <header class="flex w-full flex-col items-center pt-4 pb-6 text-center">
-    <a href={home} class="flex flex-col items-center" aria-label={SITE.title}>
-      <span
-        class="border-base-100 block h-28 w-28 overflow-hidden rounded-full border-4 shadow-sm transition hover:scale-[1.02]"
-        style="background:linear-gradient(135deg, var(--color-primary), color-mix(in oklab, var(--color-primary) 70%, white));"
+  <header class="sidebar-expanded-only flex w-full flex-col items-center pt-4 pb-6 text-center">
+    <div class="flex w-full items-center justify-center gap-2">
+      <a href={home} class="flex flex-col items-center" aria-label={SITE.title}>
+        <Image
+          src={cwnLogo}
+          alt={SITE.title}
+          width={180}
+          class="w-auto object-contain"
+          loading="eager"
+          decoding="async"
+        />
+      </a>
+      {/* Collapse button — next to logo when expanded */}
+      <button
+        type="button"
+        id="sidebar-collapse-btn"
+        class="sidebar-expanded-collapse-btn flex h-9 w-9 shrink-0 items-center justify-center rounded-md transition"
+        aria-label="Collapse sidebar"
       >
-        {
-          avatar ? (
-            isStringAvatar ? (
-              <img
-                src={avatarSrc.startsWith('/') ? withBase(avatarSrc) : avatarSrc}
-                alt={SITE.author.name}
-                width="112"
-                height="112"
-                class="h-full w-full object-cover"
-                loading="eager"
-                decoding="async"
-              />
-            ) : (
-              <Image
-                src={avatar}
-                alt={SITE.author.name}
-                width={112}
-                height={112}
-                class="h-full w-full object-cover"
-                loading="eager"
-                decoding="async"
-              />
-            )
-          ) : (
-            <span class="text-primary-content flex h-full w-full items-center justify-center text-3xl font-bold">
-              {SITE.title.charAt(0)}
-            </span>
-          )
-        }
-      </span>
-      <Image
-        src={cwnLogo}
-        alt={SITE.title}
-        width={180}
-        height={48}
-        class="mt-4 h-12 w-auto"
-        loading="eager"
-        decoding="async"
-      />
-    </a>
+        <Icon name="lucide:panel-left-close" width={16} height={16} />
+      </button>
+    </div>
     {
       SITE.author.bio && (
         <p class="text-base-content/70 mt-1 max-w-56 text-sm italic">{SITE.author.bio}</p>
       )
     }
   </header>
+
+  {/* Collapse toggle — shown as first nav item when collapsed */}
+  <button
+    type="button"
+    id="sidebar-expand-btn"
+    class="chirpy-nav-link sidebar-expand-btn"
+    aria-label="Expand sidebar"
+  >
+    <Icon name="lucide:panel-left-open" width={16} height={16} />
+  </button>
 
   {/* Vertical nav */}
   <nav class="chirpy-nav flex-1" aria-label="Main">
@@ -109,7 +92,7 @@ const navItems = NAV.map((item) => ({
     </ul>
   </nav>
 
-  {/* Bottom row: theme toggle + socials */}
+  {/* Bottom row: theme toggle + RSS (always visible) + socials (hidden when collapsed) */}
   <div
     class="border-base-300 mt-4 flex w-full flex-wrap items-center justify-center gap-2 border-t pt-4"
   >
@@ -120,6 +103,7 @@ const navItems = NAV.map((item) => ({
           href={s.href.startsWith('/') ? withBase(s.href) : s.href}
           rel="noopener"
           class="chirpy-social"
+          class:list={['chirpy-social', s.label === 'RSS' ? '' : 'sidebar-expanded-only']}
           aria-label={s.label}
           target={s.href.startsWith('http') || s.label === 'RSS' ? '_blank' : undefined}
         >
@@ -139,9 +123,13 @@ const navItems = NAV.map((item) => ({
   tabindex="-1"></button>
 
 <script>
+  const STORAGE_KEY = 'sidebar-collapsed';
+
   function setupSidebar() {
     const sidebar = document.getElementById('sidebar');
     const mask = document.querySelector<HTMLElement>('[data-sidebar-mask]');
+    const collapseBtn = document.getElementById('sidebar-collapse-btn');
+    const expandBtn = document.getElementById('sidebar-expand-btn');
     if (!sidebar || !mask) return;
 
     function open() {
@@ -171,10 +159,83 @@ const navItems = NAV.map((item) => ({
         if (window.matchMedia('(max-width: 1023px)').matches) close();
       }),
     );
+
+    // Desktop collapse
+    if (collapseBtn && window.matchMedia('(min-width: 1024px)').matches) {
+      collapseBtn.addEventListener('click', () => {
+        setCollapsed(true);
+      });
+    }
+
+    // Desktop expand
+    if (expandBtn && window.matchMedia('(min-width: 1024px)').matches) {
+      expandBtn.addEventListener('click', () => {
+        setCollapsed(false);
+      });
+    }
   }
-  // `astro:page-load` fires on the initial load too (when ClientRouter is
-  // present), so we only bind here. Calling setupSidebar() additionally at
-  // module top-level would double-bind handlers and make the toggle a no-op
-  // on the first page (open + close fire on the same click).
-  document.addEventListener('astro:page-load', setupSidebar);
+
+  function setCollapsed(isCollapsed: boolean) {
+    const sidebar = document.getElementById('sidebar');
+    if (!sidebar) return;
+
+    localStorage.setItem(STORAGE_KEY, isCollapsed ? 'true' : 'false');
+
+    if (isCollapsed) {
+      sidebar.classList.add('is-collapsed');
+      document.documentElement.setAttribute('data-sidebar-collapsed', '');
+    } else {
+      sidebar.classList.remove('is-collapsed');
+      document.documentElement.removeAttribute('data-sidebar-collapsed');
+    }
+  }
+
+  function initCollapseState() {
+    const sidebar = document.getElementById('sidebar');
+    if (!sidebar || window.matchMedia('(max-width: 1023px)').matches) return;
+
+    const stored = localStorage.getItem(STORAGE_KEY);
+    const isCollapsed = stored === 'true';
+    setCollapsed(isCollapsed);
+  }
+
+  // Restore state on page load
+  initCollapseState();
+  document.addEventListener('astro:page-load', () => {
+    setupSidebar();
+    initCollapseState();
+  });
 </script>
+
+<style>
+  /* Collapse button next to logo when expanded */
+  .sidebar-expanded-collapse-btn {
+    color: var(--color-sidebar-text);
+    background: transparent;
+  }
+  .sidebar-expanded-collapse-btn:hover {
+    color: var(--color-primary);
+    background: color-mix(in oklab, var(--color-primary) 8%, transparent);
+  }
+
+  /* Expand button — hidden when expanded, shown as nav item when collapsed */
+  .sidebar-expand-btn {
+    display: none;
+  }
+  :global(.chirpy-sidebar.is-collapsed) .sidebar-expand-btn {
+    display: flex;
+  }
+
+  /* Hide entire expanded-only sections when collapsed */
+  :global(.chirpy-sidebar.is-collapsed) :global(.sidebar-expanded-only) {
+    display: none !important;
+  }
+
+  /* Hide collapse/expand buttons on mobile — sidebar toggle is handled by hamburger menu */
+  @media (max-width: 1023px) {
+    .sidebar-expanded-collapse-btn,
+    .sidebar-expand-btn {
+      display: none !important;
+    }
+  }
+</style>

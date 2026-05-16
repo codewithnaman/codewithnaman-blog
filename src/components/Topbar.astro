@@ -6,7 +6,9 @@
 import { SITE } from '../config';
 import { useTranslations } from '../i18n/utils';
 import { Icon } from 'astro-icon/components';
+import { Image } from 'astro:assets';
 import SearchButton from './islands/SearchButton.astro';
+import cwnLogo from '../assets/images/site/CWN Logo.png';
 
 interface Props {
   /**
@@ -57,8 +59,15 @@ const home = '/';
     </nav>
 
     {/* Mobile site title */}
-    <a href={home} class="ml-1 truncate text-base font-semibold sm:hidden" aria-label={SITE.title}>
-      {SITE.title}
+    <a href={home} class="ml-1 shrink-0 sm:hidden" aria-label={SITE.title}>
+      <Image
+        src={cwnLogo}
+        alt={SITE.title}
+        width={120}
+        class="w-auto"
+        loading="eager"
+        decoding="async"
+      />
     </a>
   </div>
 

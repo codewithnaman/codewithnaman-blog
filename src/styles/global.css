@@ -126,6 +126,7 @@
   /* Sidebar/panel widths — matches Chirpy ($sidebar-width 260px, $sidebar-width-large 300px) */
   --width-sidebar: 16.25rem; /* 260px */
   --width-sidebar-lg: 18.75rem; /* 300px (>=1650px) */
+  --width-sidebar-collapsed: 4rem; /* 64px */
   --width-panel: 13.75rem; /* 220px */
 
   /* Top bar height — Chirpy $topbar-height: 3rem */
@@ -238,7 +239,36 @@
     width: var(--width-sidebar);
     background: linear-gradient(180deg, var(--color-sidebar-from) 0%, var(--color-sidebar-to) 100%);
     color: var(--color-sidebar-text);
-    transition: transform 0.3s ease;
+    transition:
+      width 0.3s ease,
+      transform 0.3s ease;
+  }
+  @media (min-width: 1024px) {
+    .chirpy-sidebar.is-collapsed {
+      width: var(--width-sidebar-collapsed);
+    }
+    .chirpy-sidebar.is-collapsed .sidebar-expanded-only {
+      display: none !important;
+    }
+    .chirpy-sidebar.is-collapsed .chirpy-nav-link span:not(.chirpy-nav-link__icon-wrap) {
+      display: none;
+    }
+    .chirpy-sidebar.is-collapsed .chirpy-nav-link {
+      @apply justify-center px-0;
+    }
+    .chirpy-sidebar.is-collapsed .chirpy-nav-link svg,
+    .chirpy-sidebar.is-collapsed .chirpy-nav-link i {
+      @apply h-4 w-4;
+    }
+    .chirpy-sidebar.is-collapsed .chirpy-nav {
+      @apply items-center;
+    }
+    .chirpy-sidebar.is-collapsed .chirpy-nav ul {
+      @apply w-full;
+    }
+    .chirpy-sidebar.is-collapsed .chirpy-nav li {
+      @apply w-full;
+    }
   }
   @media (max-width: 1023px) {
     .chirpy-sidebar {
@@ -252,10 +282,17 @@
     .chirpy-sidebar {
       width: var(--width-sidebar-lg);
     }
+    .chirpy-sidebar.is-collapsed {
+      width: var(--width-sidebar-collapsed);
+    }
   }
 
   .chirpy-main-wrapper {
     @apply flex min-h-screen w-full flex-col px-4 sm:px-6;
+    transition:
+      margin-left 0.3s ease,
+      width 0.3s ease,
+      max-width 0.3s ease;
   }
   @media (min-width: 1024px) {
     .chirpy-main-wrapper {
@@ -264,6 +301,13 @@
       max-width: calc(100% - var(--width-sidebar));
       padding-left: 3rem;
       padding-right: 3rem;
+    }
+  }
+  [data-sidebar-collapsed] .chirpy-main-wrapper {
+    @media (min-width: 1024px) {
+      margin-left: var(--width-sidebar-collapsed);
+      width: calc(100% - var(--width-sidebar-collapsed));
+      max-width: calc(100% - var(--width-sidebar-collapsed));
     }
   }
   @media (min-width: 1280px) {
@@ -277,6 +321,11 @@
       margin-left: var(--width-sidebar-lg);
       width: calc(100% - var(--width-sidebar-lg));
       max-width: calc(100% - var(--width-sidebar-lg));
+    }
+    [data-sidebar-collapsed] .chirpy-main-wrapper {
+      margin-left: var(--width-sidebar-collapsed);
+      width: calc(100% - var(--width-sidebar-collapsed));
+      max-width: calc(100% - var(--width-sidebar-collapsed));
     }
   }
 
@@ -348,6 +397,10 @@
      visibility are owned by the rail wrapper, so this is content-only. */
   .chirpy-panel {
     @apply block text-sm;
+  }
+  /* Hide panel sections when sidebar is collapsed (TOC in aside-bottom stays visible). */
+  [data-sidebar-collapsed] .chirpy-panel {
+    display: none;
   }
 
   /* Subtle left rail for aside items (Recently Updated, TOC, etc.).

@@ -111,6 +111,7 @@ const crumbs = [{ label: t('nav.posts'), href: '/' }, { label: post.data.title }
   tags={post.data.tags}
   crumbs={crumbs}
   seo={seo}
+  hideDefaultPanel
 >
   <ScrollProgress />
   <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
