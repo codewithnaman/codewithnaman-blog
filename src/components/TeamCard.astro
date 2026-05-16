@@ -1,4 +1,6 @@
 ---
+import { Icon } from 'astro-icon/components';
+
 interface Props {
   name: string;
   role: string;
@@ -13,11 +15,11 @@ const { name, role, bio, avatarUrl, socials = [] } = Astro.props;
 <div class="card bg-base-100 border-base-200 border shadow-md">
   <div class="card-body p-5">
     <div class="flex items-center gap-4">
-      <div class="avatar placeholder">
-        <div class="bg-neutral text-neutral-content w-16 rounded-full">
+      <div class="avatar placeholder shrink-0">
+        <div class="bg-neutral text-neutral-content h-16 w-16 rounded-full">
           {
             avatarUrl ? (
-              <img src={avatarUrl} alt={name} class="h-full w-full rounded-full object-cover" />
+              <img src={avatarUrl} alt={name} class="mt-0.5 rounded-full" />
             ) : (
               <span class="text-2xl font-bold">{name.charAt(0)}</span>
             )
@@ -25,24 +27,23 @@ const { name, role, bio, avatarUrl, socials = [] } = Astro.props;
         </div>
       </div>
       <div>
-        <h3 class="text-lg font-bold">{name}</h3>
-        <p class="text-base-content/60 text-sm">{role}</p>
+        <h3 class="text-lg leading-none font-bold">{name}</h3>
+        <p class="text-base-content/60 -mt-3 text-sm">{role}</p>
       </div>
     </div>
-    <p class="text-base-content/80 mt-3 text-sm">{bio}</p>
+    <p class="text-base-content/80 mt-1 text-sm">{bio}</p>
     {
       socials.length > 0 && (
-        <div class="mt-4 flex gap-3">
+        <div class="mt-4 flex gap-4">
           {socials.map((social) => (
             <a
               href={social.href}
               target="_blank"
               rel="noopener noreferrer"
-              class="btn btn-ghost btn-xs gap-1"
+              class="text-base-content/60 hover:text-base-content transition-colors"
               aria-label={`${social.label} of ${name}`}
             >
-              <span class="iconify" data-icon={social.icon} data-width="16" />
-              {social.label}
+              <Icon name={social.icon} width={20} height={20} />
             </a>
           ))}
         </div>

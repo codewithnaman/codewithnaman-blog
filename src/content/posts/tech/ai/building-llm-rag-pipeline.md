@@ -2,7 +2,7 @@
 title: 'Building a Production-Ready RAG Pipeline'
 description: 'How we built a retrieval-augmented generation system serving 10K+ queries/day with sub-second latency.'
 pubDate: 2026-05-08
-author: 'john-smith'
+author: 'naman-gupta'
 tags: [ai, rag, llm, python]
 categories: [AI, Engineering]
 draft: false

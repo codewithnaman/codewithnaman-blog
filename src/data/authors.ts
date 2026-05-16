@@ -15,46 +15,25 @@ const authors: Record<string, Author> = {
   'naman-gupta': {
     slug: 'naman-gupta',
     name: 'Naman Gupta',
-    role: 'Senior Backend & Platform Engineer',
-    avatarUrl: 'https://avatars.githubusercontent.com/u/placeholder?v=4',
-    bio: 'Focuses on system design, distributed systems, and cloud infrastructure. Passionate about building high-throughput services and sharing production-ready patterns.',
-    github: 'https://github.com',
-    twitter: 'https://x.com',
-    linkedin: 'https://linkedin.com',
+    role: 'Engineering Manager',
+    avatarUrl: '/images/naman-gupta.jpg',
+    bio: 'Software Engineering Manager with 11+ years of experience, including 8+ in FinTech. Leads Core Payment Authentication at Mastercard. Focuses on engineering leadership, distributed systems, and applied AI.',
+    github: 'https://github.com/codewithnaman',
+    twitter: 'https://twitter.com/codewithnaman',
+    linkedin: 'https://www.linkedin.com/in/codewithnaman/',
   },
-  'jane-doe': {
-    slug: 'jane-doe',
-    name: 'Jane Doe',
-    role: 'FinTech Engineer',
-    avatarUrl: 'https://avatars.githubusercontent.com/u/placeholder?v=4',
-    bio: 'Specializes in payment processing, ledger systems, and financial infrastructure. Writes about fraud detection, PCI compliance, and building idempotent APIs.',
-    github: 'https://github.com',
-    twitter: 'https://x.com',
-    linkedin: 'https://linkedin.com',
-  },
-  'john-smith': {
-    slug: 'john-smith',
-    name: 'John Smith',
-    role: 'AI/ML Engineer',
-    avatarUrl: 'https://avatars.githubusercontent.com/u/placeholder?v=4',
-    bio: 'Works on practical applications of AI in engineering workflows. Covers RAG pipelines, vector databases, prompt engineering, and LLM integration patterns.',
-    github: 'https://github.com',
-    twitter: 'https://x.com',
-    linkedin: 'https://linkedin.com',
-  },
-  'alex-chen': {
-    slug: 'alex-chen',
-    name: 'Alex Chen',
-    role: 'Backend Engineer',
-    avatarUrl: 'https://avatars.githubusercontent.com/u/placeholder?v=4',
-    bio: 'Deep expertise in microservices, event-driven architecture, and database design. Writes about caching strategies, message queues, and API design patterns.',
-    github: 'https://github.com',
-    twitter: 'https://x.com',
-    linkedin: 'https://linkedin.com',
+  'vikas-pathneja': {
+    slug: 'vikas-pathneja',
+    name: 'Vikas Pathneja',
+    role: 'Senior Software Engineer',
+    avatarUrl: '/images/vikas-pathneja.jpg',
+    bio: 'Senior Software Engineer at Mastercard with 9+ years of experience in web application development and integration. Specializes in building transactional and scalable systems, microservices with Spring Boot, and financial solutions.',
+    github: 'https://github.com/vikaspathneja',
+    linkedin: 'https://www.linkedin.com/in/vikaspathneja/',
   },
 };
 
-const authorOrder = ['naman-gupta', 'jane-doe', 'john-smith', 'alex-chen'];
+const authorOrder = ['naman-gupta', 'vikas-pathneja'];
 
 export function getAuthor(slug?: string): Author {
   if (slug && authors[slug]) {

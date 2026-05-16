@@ -1,98 +1,95 @@
 ---
 import PageLayout from '~/layouts/PageLayout.astro';
-import { SITE } from '~/config';
 import TeamCard from '~/components/TeamCard.astro';
 import { getAllAuthors } from '~/data/authors';
 
 const teamMembers = getAllAuthors();
 ---
 
-<PageLayout title="About Us" description={SITE.description}>
-  <article class="px-1 py-6 sm:px-2 sm:py-8">
-    <header class="mb-8">
-      <h1
-        class="text-base-content text-3xl leading-tight font-extrabold tracking-tight sm:text-[2.25rem]"
-      >
-        About Us
-      </h1>
-      <p class="text-base-content/65 mt-3 text-lg">
-        Meet the team behind the blog — engineers passionate about system design, FinTech, and AI.
-      </p>
-    </header>
+<PageLayout
+  title="About Us"
+  description="A space built by a team of engineers to share what we've learned building real systems."
+  hidePanel
+>
+  <p>
+    <strong>CodeWithNaman Blog</strong> is a space built by a team of engineers to share what we've actually
+    learned building real systems — the wins, the trade-offs, and the lessons that only come from shipping
+    to production.
+  </p>
 
-    <div class="prose-chirpy max-w-none">
-      <h2>Our Team</h2>
-      <p>
-        We are a group of engineers who love building reliable, scalable systems and sharing what we
-        learn along the way.
-      </p>
+  <h2>What We Write About</h2>
+  <p>Our posts are technical deep-dives — not hot takes or surface-level tutorials. We cover:</p>
+  <ul>
+    <li>
+      <strong>Software Architecture</strong> — Distributed systems, event-driven design, microservices,
+      and the trade-offs behind scalable systems
+    </li>
+    <li>
+      <strong>System Design</strong> — High-throughput services, data pipelines, and patterns that hold
+      up under real-world load
+    </li>
+    <li>
+      <strong>AI &amp; Machine Learning</strong> — Practical applications of AI in engineering workflows,
+      from LLMs to intelligent automation
+    </li>
+    <li>
+      <strong>Cloud &amp; Infrastructure</strong> — Kubernetes, Terraform, platform engineering, and the
+      tools that keep systems running
+    </li>
+    <li>
+      <strong>FinTech</strong> — Payment processing, ledger systems, financial infrastructure, and the
+      tech behind modern money movement
+    </li>
+    <li>
+      <strong>Personal Finance</strong> — Budgeting, investing, and financial literacy for engineers who
+      want to make their money work as hard as they do
+    </li>
+  </ul>
 
-      <div class="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
-        {
-          teamMembers.map((member) => (
-            <TeamCard
-              name={member.name}
-              role={member.role}
-              bio={member.bio}
-              avatarUrl={member.avatarUrl}
-              socials={[
-                member.github && {
-                  label: 'GitHub',
-                  href: member.github,
-                  icon: 'simple-icons:github',
-                },
-                member.twitter && {
-                  label: 'Twitter',
-                  href: member.twitter,
-                  icon: 'simple-icons:x',
-                },
-                member.linkedin && {
-                  label: 'LinkedIn',
-                  href: member.linkedin,
-                  icon: 'simple-icons:linkedin',
-                },
-              ].filter(Boolean)}
-            />
-          ))
-        }
-      </div>
+  <h2>Our Mission</h2>
+  <p>
+    We believe the best engineering knowledge comes from doing, not theorizing. Our mission is
+    simple: <strong>spread applied knowledge and learnings</strong>. Every post on this blog is
+    written by someone who has built, broken, and rebuilt something in production. We share those
+    learnings so you don't have to learn the hard way.
+  </p>
 
-      <h2>What We Write About</h2>
-      <p>
-        Our posts are technical deep-dives — not hot takes or surface-level tutorials. We cover:
-      </p>
-      <ul>
-        <li>
-          <strong>System Design</strong> — Distributed systems, event-driven architecture, and high-throughput
-          services
-        </li>
-        <li>
-          <strong>FinTech</strong> — Payment processing, ledger systems, and financial infrastructure
-        </li>
-        <li>
-          <strong>Cloud &amp; Infrastructure</strong> — Kubernetes, Terraform, and platform engineering
-        </li>
-        <li>
-          <strong>AI &amp; ML</strong> — Practical applications of AI in engineering workflows
-        </li>
-      </ul>
+  <h2>The Team</h2>
 
-      <h2>Connect</h2>
-      <p>
-        Have a question or want to contribute? Reach out through any of our social links above, or
-        drop us an email at <a href="mailto:hello@codewithnaman.com">hello@codewithnaman.com</a>.
-      </p>
+  <div class="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
+    {
+      teamMembers.map((member) => (
+        <TeamCard
+          name={member.name}
+          role={member.role}
+          bio={member.bio}
+          avatarUrl={member.avatarUrl}
+          socials={[
+            member.github && {
+              label: 'GitHub',
+              href: member.github,
+              icon: 'simple-icons:github',
+            },
+            member.twitter && {
+              label: 'Twitter',
+              href: member.twitter,
+              icon: 'simple-icons:x',
+            },
+            member.linkedin && {
+              label: 'LinkedIn',
+              href: member.linkedin,
+              icon: 'simple-icons:linkedin',
+            },
+          ].filter((s): s is { label: string; href: string; icon: string } => Boolean(s))}
+        />
+      ))
+    }
+  </div>
 
-      <h2>About This Blog</h2>
-      <p>
-        Built with <a href="https://astro.build">Astro</a>, <a href="https://tailwindcss.com"
-          >TailwindCSS</a
-        >, and <a href="https://mdxjs.com">MDX</a>. Hosted on <a href="https://pages.github.com"
-          >GitHub Pages</a
-        >. The theme is based on <a href="https://github.com/kannansuresh/chirping-astro"
-          >Chirping Astro</a
-        >.
-      </p>
-    </div>
-  </article>
+  <h2>Connect</h2>
+  <p>
+    Have a question, topic suggestion, or want to contribute? Reach out through our social links
+    above, or drop us an email at
+    <a href="mailto:contact@codewithnaman.com">contact@codewithnaman.com</a>.
+  </p>
 </PageLayout>

@@ -9,19 +9,26 @@ interface Props {
   crumbs?: Array<{ label: string; href?: string }>;
   /** Load KaTeX CSS for this page only (no global load). */
   math?: boolean;
+  /** Hide the right panel entirely. */
+  hidePanel?: boolean;
 }
 
-const { title, description, crumbs, math = false } = Astro.props;
+const { title, description, crumbs, math = false, hidePanel = false } = Astro.props;
 
 const articleClass = SITE.boxedArticles
   ? 'border-base-300 bg-base-100 rounded-md border px-5 py-8 sm:px-8 sm:py-10'
   : 'px-1 py-6 sm:px-2 sm:py-8';
 ---
 
-<BaseLayout title={title} description={description} crumbs={crumbs ?? [{ label: title }]}>
+<BaseLayout
+  title={title}
+  description={description}
+  crumbs={crumbs ?? [{ label: title }]}
+  hidePanel={hidePanel}
+>
   {math && <MathStyles />}
   <article class={articleClass}>
-    <header class="mb-6">
+    <header class="mb-2">
       <h1 class="text-3xl leading-tight font-extrabold tracking-tight">{title}</h1>
       {description && <p class="text-base-content/70 mt-2">{description}</p>}
     </header>

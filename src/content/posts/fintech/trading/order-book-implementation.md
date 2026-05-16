@@ -2,7 +2,7 @@
 title: 'Order Book Implementation'
 description: 'Designing and implementing a high-performance order book for trading systems.'
 pubDate: 2025-12-22
-author: 'alex-chen'
+author: 'vikas-pathneja'
 tags: [trading, order-book, low-latency, systems]
 categories: [FinTech, Engineering]
 draft: false
