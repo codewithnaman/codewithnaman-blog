@@ -31,7 +31,7 @@ We will discuss agents, how they work, and the role of LLMs in more detail in an
 
 Let’s understand what makes Claude Code different from a traditional chatbot. The workflow of Claude Code is demonstrated below:
 
-![Claude Code Agentic Loop](images/Claude_Code_Agentic_Loop.svg)
+![Claude Code Agentic Loop](images/Claude_Code_Agentic_Loop.png)
 
 The above diagram shows that you first provide a prompt. The agent then gathers the relevant context around the request, decides what actions need to be taken, performs those actions, verifies the results, and completes the loop once the objective is achieved.
 
