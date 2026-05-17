@@ -1,12 +1,13 @@
 ---
 title: 'Understand Claude Code'
 description: "How to use Claude code better using it's all available functionality. When to use what"
-pubDate: 2026-05-08
+pubDate: 2026-05-17
 author: 'naman-gupta'
 tags: [ai, calude]
 categories: [AI, Claude]
 draft: false
 toc: true
+pinned: true
 ---
 
 We use Claude Code extensively nowadays. Similar tools also exist, such as GitHub Copilot and OpenCode. This tutorial focuses on Claude Code, how it can complement your development workflow, and how to manage context effectively within Claude Code. Let’s dive deeper into what Claude Code is and how it works.
